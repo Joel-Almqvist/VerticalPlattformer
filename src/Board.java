@@ -62,7 +62,6 @@ public class Board {
 
     public boolean playerIsFloating(){
         boolean x = !board[playerPos[0]][playerPos[1]+1].SOLID;
-        System.out.println("floating = "+x);
         return x;
     }
 
