@@ -34,7 +34,7 @@ public class Board {
 		//if (r == 0 || r == this.height-1 || c == this.height - 1) {
 		    this.board[c][r] = BlockType.PLATTFORM;
 		}
-		else if (c == 8 && r == 3){
+		else if (c == 8 && r == height-2){
 		    this.board[c][r] = BlockType.PLAYER;
 		    this.playerPos = new int[]{c,r};
 		}
@@ -92,6 +92,15 @@ public class Board {
             System.out.println("Failed shift down");
 	}
     }
+
+
+    public void jump(){
+	board[playerPos[0]][playerPos[1]] = BlockType.AIR;
+	playerPos[1] -= 5;
+	board[playerPos[0]][playerPos[1]] = BlockType.PLAYER;
+	notifyListeners();
+    }
+
 
     public void addBoardListener(BoardListener bl){
         boardListeners.add(bl);

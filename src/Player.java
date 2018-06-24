@@ -3,13 +3,13 @@ import java.awt.event.ActionEvent;
 
 public class Player implements BoardListener{
     private static final int FALLTIME = 200;
-    private BoardVisual comp;
+    private BoardVisual boardVisual;
     private Board board;
     private Timer timer;
 
     public Player(BoardVisual boardVisual, Board board) {
 
-	this.comp = boardVisual;
+	this.boardVisual = boardVisual;
 	this.board = board;
 	setUpKeyBinds();
 	timer = new Timer(FALLTIME, fallDown);
@@ -17,11 +17,14 @@ public class Player implements BoardListener{
     }
 
      private void setUpKeyBinds(){
-	 comp.getInputMap().put(KeyStroke.getKeyStroke("RIGHT"), "moveRight");
-	 comp.getActionMap().put("moveRight", moveRight);
+	 boardVisual.getInputMap().put(KeyStroke.getKeyStroke("RIGHT"), "moveRight");
+	 boardVisual.getActionMap().put("moveRight", moveRight);
 
-	 comp.getInputMap().put(KeyStroke.getKeyStroke("LEFT"), "moveLeft");
-	 comp.getActionMap().put("moveLeft", moveLeft);
+	 boardVisual.getInputMap().put(KeyStroke.getKeyStroke("LEFT"), "moveLeft");
+	 boardVisual.getActionMap().put("moveLeft", moveLeft);
+
+	 boardVisual.getInputMap().put(KeyStroke.getKeyStroke("UP"), "jump");
+	 boardVisual.getActionMap().put("jump", jump);
      }
 
 
@@ -38,6 +41,15 @@ public class Player implements BoardListener{
 	     board.movePlayerLeft();
 	 }
      };
+
+    private Action jump = new AbstractAction(){
+     @Override
+     public void actionPerformed(ActionEvent e){
+         timer.stop();
+         timer.start();
+	 board.jump();
+ 	}
+    };
 
     final private Action fallDown = new AbstractAction() {
         @Override
