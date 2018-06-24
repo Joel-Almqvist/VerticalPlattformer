@@ -56,12 +56,7 @@ public class BoardVisualComponent extends JComponent{
                             break;
                         }
 
-                        if(true){
-                            g2d.fillRect(RECTANGLE_WIDTH*c+c*SPACE_OFFSET,RECTANGLE_HEIGHT*r+r*SPACE_OFFSET,RECTANGLE_WIDTH,RECTANGLE_HEIGHT);
-                        }
-                        else{
-                            g2d.drawRect(RECTANGLE_WIDTH*c+c*SPACE_OFFSET,RECTANGLE_HEIGHT*r+r*SPACE_OFFSET,RECTANGLE_WIDTH,RECTANGLE_HEIGHT);
-                        }
+                        g2d.fillRect(RECTANGLE_WIDTH*c+c*SPACE_OFFSET,RECTANGLE_HEIGHT*r+r*SPACE_OFFSET,RECTANGLE_WIDTH,RECTANGLE_HEIGHT);
                     }
                 }
         }
@@ -69,18 +64,6 @@ public class BoardVisualComponent extends JComponent{
         @Override
         public Dimension getPreferredSize(){
             super.getPreferredSize();
-            //Increment RECTANGLE_WIDTH and RECTANGLE_HEIGHT slightly since container must be larger than the board
-            //return new Dimension(board.getWidth()*(RECTANGLE_WIDTH+2+SCORE_WIDTH),(RECTANGLE_HEIGHT+2)*board.getHeight());
-            //return new Dimension(1000,1000);
-
-            System.out.println("height = "+this.board.getHeight());
-            System.out.println("RECT HEIGHT = "+RECTANGLE_HEIGHT);
-            int x = (RECTANGLE_HEIGHT+3*SPACE_OFFSET)*this.board.getHeight()+100;
-            System.out.println("calced height = "+x);
-
-
-            //int y = Math.min((RECTANGLE_HEIGHT+SPACE_OFFSET)*this.board.getHeight(), 500);
-
             return new Dimension((RECTANGLE_WIDTH+SPACE_OFFSET)*this.board.getWidth()+SCORE_WIDTH,
                                  (RECTANGLE_HEIGHT+SPACE_OFFSET)*this.board.getHeight());
         }
