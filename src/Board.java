@@ -30,11 +30,11 @@ public class Board {
     public void init() {
 	for (int r = 0; r < this.height; r++) {
 	    for (int c = 0; c < this.width; c++) {
-	        if (r == this.height-1 || c == this.width -1 || c == 0) {
+	        if (r > this.height-9 || c == this.width -1 || c == 0) {
 		//if (r == 0 || r == this.height-1 || c == this.height - 1) {
 		    this.board[c][r] = BlockType.PLATTFORM;
 		}
-		else if (c == 8 && r == height-2){
+		else if (c == 8 && r == height-10){
 		    this.board[c][r] = BlockType.PLAYER;
 		    this.playerPos = new int[]{c,r};
 		}
@@ -66,18 +66,22 @@ public class Board {
     }
 
     public void movePlayerRight(){
-	board[playerPos[0]][playerPos[1]] = BlockType.AIR;
-	playerPos[0] += 1;
-	board[playerPos[0]][playerPos[1]] = BlockType.PLAYER;
-	notifyListeners();
+        if(!board[playerPos[0]+1][playerPos[1]].SOLID) {
+	    board[playerPos[0]][playerPos[1]] = BlockType.AIR;
+	    playerPos[0] += 1;
+	    board[playerPos[0]][playerPos[1]] = BlockType.PLAYER;
+	    notifyListeners();
+	}
 
     }
 
     public void movePlayerLeft(){
-	board[playerPos[0]][playerPos[1]] = BlockType.AIR;
-	playerPos[0] -= 1;
-	board[playerPos[0]][playerPos[1]] = BlockType.PLAYER;
-	notifyListeners();
+	if(!board[playerPos[0]-1][playerPos[1]].SOLID) {
+	    board[playerPos[0]][playerPos[1]] = BlockType.AIR;
+	    playerPos[0] -= 1;
+	    board[playerPos[0]][playerPos[1]] = BlockType.PLAYER;
+	    notifyListeners();
+	}
     }
 
     public void movePlayerDown(){
@@ -94,10 +98,12 @@ public class Board {
 
 
     public void jump(){
-	board[playerPos[0]][playerPos[1]] = BlockType.AIR;
-	playerPos[1] -= 5;
-	board[playerPos[0]][playerPos[1]] = BlockType.PLAYER;
-	notifyListeners();
+        if(!playerIsFloating()) {
+	    board[playerPos[0]][playerPos[1]] = BlockType.AIR;
+	    playerPos[1] -= 8;
+	    board[playerPos[0]][playerPos[1]] = BlockType.PLAYER;
+	    notifyListeners();
+	}
     }
 
 
@@ -109,5 +115,9 @@ public class Board {
         for(BoardListener bl : this.boardListeners){
             bl.boardChange();
 	}
+    }
+
+    public boolean shiftDown(){
+        return true;
     }
 }

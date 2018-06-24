@@ -55,13 +55,10 @@ public class Player implements BoardListener{
 	};
 
 
-
      private Action moveLeftPress = new AbstractAction(){
 	 @Override
 	 public void actionPerformed(ActionEvent e){
-	     //System.out.println("Left arrow pressed down");
 	     if(!movementTimer.isRunning()) {
-		 //board.movePlayerLeft();
 		 movingRight = false;
 		 movementTimer.start();
 	     }
@@ -109,9 +106,13 @@ public class Player implements BoardListener{
 	}
     };
 
+    /**
+     * Whenever the board changes check if the player floating, if he is check if the gravity timer is running.
+     * If the player reaches solid ground before the timer expires stop the timer. If this does not happen
+     * move the player down one step.
+     */
     public void boardChange(){
         if(this.board.playerIsFloating()){
-
 	    if(!gravityTimer.isRunning()){
 	        gravityTimer.start();
 	    }

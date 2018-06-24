@@ -27,7 +27,6 @@ public class BoardVisual extends JComponent implements BoardListener{
     }
 
     public void boardChange(){
-        System.out.println("board has changed");
         repaint();
     }
 
