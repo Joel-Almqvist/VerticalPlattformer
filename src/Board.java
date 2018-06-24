@@ -34,7 +34,7 @@ public class Board {
 		//if (r == 0 || r == this.height-1 || c == this.height - 1) {
 		    this.board[c][r] = BlockType.PLATTFORM;
 		}
-		else if (c == 1 && r == this.height-2){
+		else if (c == 8 && r == 3){
 		    this.board[c][r] = BlockType.PLAYER;
 		    this.playerPos = new int[]{c,r};
 		}
@@ -43,26 +43,27 @@ public class Board {
 		}
 	    }
 	}
-	/*
-	StringBuilder builder = new StringBuilder();
-	for (int c = 0; c < this.width; c++) {
-	    for (int r = 0; r < this.height; r++) {
-		if (this.board[c][r] == BlockType.AIR) {
-		    builder.append("A");
-		} else if (this.board[c][r] == BlockType.PLATTFORM) {
-		    builder.append("P");
-		} else {
-		    builder.append("T");
-		}
-	    }
-	    builder.append("\n");
-	}
-	System.out.println(builder);
-	*/
     }
 
+    // TODO Remove this later on
+    public void shuffle() {
+	for (int r = 0; r < this.height; r++) {
+	    for (int c = 0; c < this.width; c++) {
+		if(r == c){
+		    board[r][c] = BlockType.PLATTFORM;
+		}
+
+	    }
+	}
+    }
     public BlockType getBlockAt(int column, int row){
         return board[column][row];
+    }
+
+    public boolean playerIsFloating(){
+        boolean x = !board[playerPos[0]][playerPos[1]+1].SOLID;
+        System.out.println("floating = "+x);
+        return x;
     }
 
     public void movePlayerRight(){
@@ -78,6 +79,18 @@ public class Board {
 	playerPos[0] -= 1;
 	board[playerPos[0]][playerPos[1]] = BlockType.PLAYER;
 	notifyListeners();
+    }
+
+    public void movePlayerDown(){
+        if(playerIsFloating()){
+	    board[playerPos[0]][playerPos[1]] = BlockType.AIR;
+	    playerPos[1] += 1;
+	    board[playerPos[0]][playerPos[1]] = BlockType.PLAYER;
+	    notifyListeners();
+	}
+	else{
+            System.out.println("Failed shift down");
+	}
     }
 
     public void addBoardListener(BoardListener bl){
