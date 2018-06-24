@@ -1,6 +1,6 @@
 public class Game{
     public static void main(String[] args) {
-        System.out.println("Hello World!"); // Display the string.
+        System.out.println("Hello World!");
 
         Board board = new Board(40,50);
         BoardVisual boardVisual = new BoardVisual(board);
@@ -8,7 +8,7 @@ public class Game{
 	board.addBoardListener(boardVisual);
 
         Player player = new Player(boardVisual, board);
-        System.out.println("Bye World!"); // Display the string.
+        System.out.println("Bye World!");
     }
 
 
