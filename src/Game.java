@@ -4,7 +4,7 @@ public class Game{
         Board board = new Board(50,50);
         BoardVisualComponent comp = new BoardVisualComponent(board);
 	BoardVisualFrame frame = new BoardVisualFrame(board, "window name", comp);
-        System.out.println("Bye World!"); // Display the string.
+        System.out.println("Bye World!asdasd"); // Display the string.
         // TODO Fix prefered window size and such
     }
 
