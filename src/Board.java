@@ -12,8 +12,8 @@ public class Board {
     }
 
     public Board(int width, int height){
-        this.width = width-1;
-        this.height = height-1;
+        this.width = width;
+        this.height = height;
         this.board = new BlockType[width][height];
         this.init();
     }
@@ -22,16 +22,36 @@ public class Board {
      * Initializes all blocktypes in the board to plattform or air
      */
     public void init() {
-	for (int c = 0; c < width; c++) {
-	    for (int r = 0; r < height; r++) {
-		if (r == 0 || r == width-1 || c == height - 1) {
+	for (int r = 0; r < this.height; r++) {
+	    for (int c = 0; c < this.width; c++) {
+	        if (r == this.height-1 || c == this.width -1 || c == 0) {
+		//if (r == 0 || r == this.height-1 || c == this.height - 1) {
 		    this.board[c][r] = BlockType.PLATTFORM;
+		}
+		else if (c == 1 && r == this.height-2){
+		    this.board[c][r] = BlockType.PLAYER;
 		}
 		else{
 		    this.board[c][r] = BlockType.AIR;
 		}
 	    }
 	}
+	/*
+	StringBuilder builder = new StringBuilder();
+	for (int c = 0; c < this.width; c++) {
+	    for (int r = 0; r < this.height; r++) {
+		if (this.board[c][r] == BlockType.AIR) {
+		    builder.append("A");
+		} else if (this.board[c][r] == BlockType.PLATTFORM) {
+		    builder.append("P");
+		} else {
+		    builder.append("T");
+		}
+	    }
+	    builder.append("\n");
+	}
+	System.out.println(builder);
+	*/
     }
 
     public BlockType getBlockAt(int column, int row){
