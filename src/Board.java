@@ -1,7 +1,12 @@
+import java.util.ArrayList;
+import java.util.List;
+
 public class Board {
     private int width;
     private int height;
     private BlockType[][] board;
+    private int[] playerPos = null;
+    private List<BoardListener> boardListeners;
 
     public int getHeight(){
         return this.height;
@@ -16,6 +21,7 @@ public class Board {
         this.height = height;
         this.board = new BlockType[width][height];
         this.init();
+        this.boardListeners = new ArrayList<>();
     }
 
     /**
@@ -30,6 +36,7 @@ public class Board {
 		}
 		else if (c == 1 && r == this.height-2){
 		    this.board[c][r] = BlockType.PLAYER;
+		    this.playerPos = new int[]{c,r};
 		}
 		else{
 		    this.board[c][r] = BlockType.AIR;
@@ -58,4 +65,28 @@ public class Board {
         return board[column][row];
     }
 
+    public void movePlayerRight(){
+	board[playerPos[0]][playerPos[1]] = BlockType.AIR;
+	playerPos[0] += 1;
+	board[playerPos[0]][playerPos[1]] = BlockType.PLAYER;
+	notifyListeners();
+
+    }
+
+    public void movePlayerLeft(){
+	board[playerPos[0]][playerPos[1]] = BlockType.AIR;
+	playerPos[0] -= 1;
+	board[playerPos[0]][playerPos[1]] = BlockType.PLAYER;
+	notifyListeners();
+    }
+
+    public void addBoardListener(BoardListener bl){
+        boardListeners.add(bl);
+    }
+
+    private void notifyListeners(){
+        for(BoardListener bl : this.boardListeners){
+            bl.boardChange();
+	}
+    }
 }
