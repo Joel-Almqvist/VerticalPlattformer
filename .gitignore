@@ -1,4 +1,3 @@
-#out files
-out/*
+out/**
 *.class
-
+.idea/**
