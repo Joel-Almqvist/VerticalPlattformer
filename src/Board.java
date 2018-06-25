@@ -1,10 +1,13 @@
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class Board {
     private int width;
     private int height;
     private BlockType[][] board;
+    private BlockType[][] nextChunk = null;
+    private PlattformGenerator plattformGenerator;
     private int[] playerPos = null;
     private List<BoardListener> boardListeners;
 
@@ -20,8 +23,13 @@ public class Board {
         this.width = width;
         this.height = height;
         this.board = new BlockType[width][height];
-        this.init();
         this.boardListeners = new ArrayList<>();
+
+        // TODO do not hardcode this!
+        this.plattformGenerator = new PlattformGenerator(width,8,3);
+
+        // TODO This should not be here
+	this.init();
     }
 
     /**
@@ -46,6 +54,7 @@ public class Board {
 		}
 	    }
 	}
+	this.nextChunk = this.plattformGenerator.generateChunk(board);
     }
 
     // TODO Remove this later on
@@ -143,17 +152,29 @@ public class Board {
         if(playerPos[1] == this.height -1) {
 	    return false;
 	}
+
+	if(nextChunk[0].length == 0){
+            nextChunk = plattformGenerator.generateChunk(board);
+	}
+
 	playerPos[1]++;
 	for (int r = this.height-1; r >= 0; r--) {
 	    for (int c = 0; c < this.width; c++) {
 	        if(r == 0){
-		    board[c][r] = BlockType.AIR;
+		    board[c][r] = nextChunk[c][0];
 		}
 		else {
 		    board[c][r] = board[c][r - 1];
 		}
 	    }
 	}
+	//System.out.println(nextChunk[0].length);
+	for(int c = 0; c < nextChunk.length; c++){
+	    nextChunk[c] = Arrays.copyOfRange(nextChunk[c],1,nextChunk[c].length);
+	}
+	//System.out.println(nextChunk[0].length);
+
+
 	notifyListeners();
 	return true;
     }

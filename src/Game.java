@@ -2,7 +2,7 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 
 public class Game{
-    public final static int STARTING_TICKRATE = 1000;
+    public final static int STARTING_TICKRATE = 400;
     private Board board;
     private BoardVisual boardVisual;
     private BoardFrame frame;
@@ -30,7 +30,7 @@ public class Game{
 
         Game game = new Game(board, boardVisual, frame, player);
         game.start();
-        // TODO Add shift down and game over properly
+        // TODO Add plattform generation
     }
 
     public void start(){
