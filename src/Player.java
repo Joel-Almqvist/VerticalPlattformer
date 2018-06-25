@@ -45,6 +45,8 @@ public class Player implements BoardListener{
      public void stop(){
          alive = false;
          boardVisual.getInputMap().clear();
+         gravityTimer.stop();
+         movementTimer.stop();
      }
 
      public boolean playerAlive(){
