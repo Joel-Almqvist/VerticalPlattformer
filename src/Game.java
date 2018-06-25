@@ -2,7 +2,7 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 
 public class Game{
-    public final static int STARTING_TICKRATE = 200;
+    public final static int STARTING_TICKRATE = 1000;
     private Board board;
     private BoardVisual boardVisual;
     private BoardFrame frame;
@@ -30,20 +30,21 @@ public class Game{
 
         Game game = new Game(board, boardVisual, frame, player);
         game.start();
-        // TODO Add jumping functionality
+        // TODO Add shift down and game over properly
     }
 
     public void start(){
-
+        this.gameTimer.start();
     }
 
     private Action shiftWorld = new AbstractAction(){
      @Override
      public void actionPerformed(ActionEvent e){
-         if(!board.shiftDown()){
-            System.out.println("Game Over!");
-            gameTimer.stop();
-        }
+         if(!player.playerAlive() || !board.shiftDown()) {
+             gameTimer.stop();
+             player.stop();
+             System.out.println("GAME OVER");
+         }
      }
     };
 }

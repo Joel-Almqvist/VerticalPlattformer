@@ -9,17 +9,19 @@ public class Player implements BoardListener{
     private Timer gravityTimer;
     private Timer movementTimer;
     private boolean movingRight;
+    private boolean alive = true;
 
     public Player(BoardVisual boardVisual, Board board) {
 
 	this.boardVisual = boardVisual;
 	this.board = board;
-	setUpKeyBinds();
+
 	gravityTimer = new Timer(FALLTIME, fallDown);
 	gravityTimer.setRepeats(false);
 
 	movementTimer = new Timer(MOVEMENTSPEED, autoMovePlayer);
 	movingRight = true;
+	setUpKeyBinds();
     }
 
      private void setUpKeyBinds(){
@@ -38,6 +40,15 @@ public class Player implements BoardListener{
 
 	 boardVisual.getInputMap().put(KeyStroke.getKeyStroke("UP"), "jump");
 	 boardVisual.getActionMap().put("jump", jump);
+     }
+
+     public void stop(){
+         alive = false;
+         boardVisual.getInputMap().clear();
+     }
+
+     public boolean playerAlive(){
+         return alive;
      }
 
 
@@ -89,8 +100,11 @@ public class Player implements BoardListener{
     final private Action fallDown = new AbstractAction() {
         @Override
         public void actionPerformed(ActionEvent e) {
-            board.movePlayerDown();
-            }
+            if(!board.movePlayerDown()){
+                alive = false;
+                stop();
+	    }
+	}
     };
 
 

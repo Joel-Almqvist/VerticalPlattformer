@@ -38,6 +38,9 @@ public class Board {
 		    this.board[c][r] = BlockType.PLAYER;
 		    this.playerPos = new int[]{c,r};
 		}
+		else if(r % 3 == 0 && c <= 4){
+		    this.board[c][r] = BlockType.PLATTFORM;
+		}
 		else{
 		    this.board[c][r] = BlockType.AIR;
 		}
@@ -61,8 +64,10 @@ public class Board {
     }
 
     public boolean playerIsFloating(){
-        boolean x = !board[playerPos[0]][playerPos[1]+1].SOLID;
-        return x;
+        if(playerPos[1] == this.height -1){
+            return true;
+	}
+	return !board[playerPos[0]][playerPos[1]+1].SOLID;
     }
 
     public void movePlayerRight(){
@@ -84,8 +89,15 @@ public class Board {
 	}
     }
 
-    public void movePlayerDown(){
+    /**
+     * Shifts the player one step downward, used to simulate gravity. The return bool
+     * signals whether the player died by reaching the bottom or not.
+     */
+    public boolean movePlayerDown(){
         if(playerIsFloating()){
+            if(playerPos[1] == this.height-1) {
+                return false;
+	    }
 	    board[playerPos[0]][playerPos[1]] = BlockType.AIR;
 	    playerPos[1] += 1;
 	    board[playerPos[0]][playerPos[1]] = BlockType.PLAYER;
@@ -94,13 +106,19 @@ public class Board {
 	else{
             System.out.println("Failed shift down");
 	}
+	return true;
     }
 
 
     public void jump(){
-        if(!playerIsFloating()) {
+        if(!playerIsFloating() && playerPos[1] != 0) {
 	    board[playerPos[0]][playerPos[1]] = BlockType.AIR;
-	    playerPos[1] -= 8;
+            if(playerPos[1] < 8 ){
+                playerPos[1] = 0;
+	    }
+	    else {
+		playerPos[1] -= 8;
+	    }
 	    board[playerPos[0]][playerPos[1]] = BlockType.PLAYER;
 	    notifyListeners();
 	}
@@ -117,7 +135,26 @@ public class Board {
 	}
     }
 
+    /**
+     * Moves every block one step down to its original position. Currently the top row
+     * is filled with air. The return value signals whether the player died in this shift or not.
+     */
     public boolean shiftDown(){
-        return true;
+        if(playerPos[1] == this.height -1) {
+	    return false;
+	}
+	playerPos[1]++;
+	for (int r = this.height-1; r >= 0; r--) {
+	    for (int c = 0; c < this.width; c++) {
+	        if(r == 0){
+		    board[c][r] = BlockType.AIR;
+		}
+		else {
+		    board[c][r] = board[c][r - 1];
+		}
+	    }
+	}
+	notifyListeners();
+	return true;
     }
 }
