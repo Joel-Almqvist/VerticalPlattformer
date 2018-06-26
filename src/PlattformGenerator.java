@@ -1,6 +1,9 @@
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
+import java.util.function.Predicate;
 
 public class PlattformGenerator{
 
@@ -8,20 +11,21 @@ public class PlattformGenerator{
     private int jumpHeight;
     private int minDistance;
     private Random random;
+    private int amountOfPlattforms;
 
     PlattformGenerator(int boardWidth, int jumpHeight, int minDistance){
         this.boardWidth = boardWidth;
         this.jumpHeight = jumpHeight;
         this.minDistance = minDistance;
 	this.random = new Random();
+	this.amountOfPlattforms = 3;
     }
 
     public BlockType[][] generateChunk(BlockType[][] board){
         List<int[]> upmostPlattforms = new ArrayList<>(this.boardWidth);
 
-
-
-
+	// Find the upmost row with atleast one plattform in it
+	// and save the position of all plattforms in said row.
 	for(int r = 0; r < board[0].length; r++){
              boolean foundTopRow = false;
              for(int c = 0; c < board.length; c++){
@@ -33,76 +37,89 @@ public class PlattformGenerator{
  	    if(foundTopRow) break;
  	}
 
+        BlockType[][] returnChunk = new BlockType[boardWidth][jumpHeight-3];
 
-
-
-
-
-
-        // Find the upmost row with plattforms within it
-	// and store their position
-        /*for(int c = 0; c < board.length; c++){
-            boolean foundTopRow = false;
-            for(int r = 0; r < board[0].length; r++){
-                if(board[c][r] == BlockType.PLATTFORM){
-		    upmostPlattforms.add(new int[]{c,r});
-		    foundTopRow = true;
-		}
-	    }
-	    if(foundTopRow) break;
-	}*/
-
-	/**
-	 * Randomize a potential length between minDistance and the players jumping height.
-	 * Remove the height needed for the player to reach the old top of the board.
-	 */
-
-        int distance = minDistance + random.nextInt(jumpHeight-1-minDistance);
-        /*
-        System.out.println("old distance = "+distance);
-	System.out.println("highest plattform at y = "+upmostPlattforms.get(0)[1]);
-
-	System.out.println("");
-	for(int[] pos : upmostPlattforms){
-	    System.out.println("x = "+pos[0]);
-	    System.out.println("y = "+pos[1]);
-	    System.out.println("");
-	}
-	*/
-
-        // TODO This check prevents new spawns if the map is impossible to solve
-	//distance -= upmostPlattforms.get(0)[1];
-
-	// TODO This is only occurs when an impossible map is generated, something
-	// TODO we currently do not safe guard against
-	if(distance <= 0){
-	    System.out.println(distance);
-	    distance = minDistance;
-	}
-
-
-
-        BlockType[][] returnChunk = new BlockType[boardWidth][distance];
-
-        // Do not generate any plattforms within the min distance to avoid cluttering
+        // Fill the chunk with air
         for(int c = 0; c < boardWidth; c++){
-            for(int r = 0; r < distance; r++){
-                if(r < minDistance) {
-		    returnChunk[c][r] = BlockType.AIR;
-		}
-		else{
-		    returnChunk[c][r] = BlockType.PLATTFORM;
+            for(int r = 0; r < returnChunk[0].length; r++){
+		returnChunk[c][r] = BlockType.AIR;
+	    }
+	}
+
+	// Find all positions the player can jump to
+	List<int[]> reachablePositions = new LinkedList<>();
+	for(int[] pos : upmostPlattforms){
+	    for(int c = 0; c < boardWidth; c++){
+		for(int r = 0; r < returnChunk[0].length; r++){
+		    double distanceBetweenPos = Math.sqrt(Math.pow(pos[0] - c,2) + Math.pow(pos[1] - r,2));
+	    		if(distanceBetweenPos < jumpHeight-1){
+	    		    	//System.out.println("pos "+pos[0]+" , "+pos[1]+" reachable from "+c+" , "+r);
+	    		    	//System.out.println("distance = "+distanceBetweenPos);
+				reachablePositions.add(new int[]{c,r});
+			}
+	    	    }
+	    	}
+	}
+
+	// Find all positions within the minimum distance to a highest-point in blocks
+	// and remove them from reachablePositions
+	for(int[] pos : upmostPlattforms){
+	    for(int c = 0; c < boardWidth; c++){
+		for(int r = 0; r < returnChunk[0].length; r++){
+		    double distanceBetweenPos = Math.sqrt((pos[0] - c)^2 + (pos[1] - r)^2);
+		    if(distanceBetweenPos < minDistance){
+
+			// We have found a position to remove, now remove it
+			Iterator<int[]> iterator = reachablePositions.iterator();
+			while(iterator.hasNext()){
+			    int[] reachablePos = iterator.next();
+			    if(reachablePos[0] == c && reachablePos[1] == r){
+				iterator.remove();
+			    }
+			}
+		    }
 		}
 	    }
 	}
 
-	// TODO Add a check such that it is always possible to reach the next level
 
-	for(int r = distance-1; r >= 0; r--){
-            for(int c = 0; c < boardWidth; c++){
-                if(0 != random.nextInt(9)){
-                    returnChunk[c][r] = BlockType.AIR;
-		}
+	// TODO Add a check that reachablePositions exist here
+
+	// TODO Fixa denna fullösning!
+	if(reachablePositions.isEmpty()){
+	    // Find all positions the player can jump to
+	   	for(int[] pos : upmostPlattforms){
+	   	    for(int c = 0; c < boardWidth; c++){
+	   		for(int r = 0; r < returnChunk[0].length; r++){
+	   		    double distanceBetweenPos = Math.sqrt(Math.pow(pos[0] - c,2) + Math.pow(pos[1] - r,2));
+	   	    		if(distanceBetweenPos < jumpHeight-1){
+	   				reachablePositions.add(new int[]{c,r});
+	   			}
+	   	    	    }
+	   	    	}
+	   	}
+	}
+
+
+
+	// Choose a predefined amount of random positions
+	List<int[]> randomPositions = new ArrayList<>();
+	for(int i = 0; i < this.amountOfPlattforms; i++){
+	    int pos = random.nextInt(reachablePositions.size()-1);
+	    randomPositions.add(reachablePositions.get(pos));
+	    reachablePositions.remove(pos);
+	}
+
+
+	// Set the randomly chosen blocks to plattform and if possible
+	// also set their neighbors.
+	for(int[] pos : randomPositions){
+	    returnChunk[pos[0]][pos[1]] = BlockType.PLATTFORM;
+	    if(pos[0] > 0){
+		returnChunk[pos[0]-1][pos[1]] = BlockType.PLATTFORM;
+	    }
+	    if(pos[0] < boardWidth-1){
+	    	returnChunk[pos[0]+1][pos[1]] = BlockType.PLATTFORM;
 	    }
 	}
 
@@ -113,7 +130,7 @@ public class PlattformGenerator{
 	    }
 	}
 	*/
-
+	returnChunk[0][0] = BlockType.PLAYER;
 	return returnChunk;
 
     }

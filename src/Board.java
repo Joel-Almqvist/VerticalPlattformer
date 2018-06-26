@@ -38,7 +38,7 @@ public class Board {
     public void init() {
 	for (int r = 0; r < this.height; r++) {
 	    for (int c = 0; c < this.width; c++) {
-	        if (r > this.height-9 || c == this.width -1 || c == 0) {
+	        if (r > this.height-9 || c == 0) {
 		//if (r == 0 || r == this.height-1 || c == this.height - 1) {
 		    this.board[c][r] = BlockType.PLATTFORM;
 		}

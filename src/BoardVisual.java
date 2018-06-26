@@ -5,8 +5,8 @@ public class BoardVisual extends JComponent implements BoardListener{
 
 
     public Board board;
-    public final static int RECTANGLE_HEIGHT = 12;
-    public final static int RECTANGLE_WIDTH = 12;
+    public final static int RECTANGLE_HEIGHT = 20;
+    public final static int RECTANGLE_WIDTH = 20;
     public final static int SPACE_OFFSET = 2;
     public final static int SCORE_WIDTH = 250;
     /** The margin between the end of the board

@@ -20,7 +20,7 @@ public class Game{
     }
 
     public static void main(String[] args) {
-        Board board = new Board(40, 50);
+        Board board = new Board(20, 25);
         BoardVisual boardVisual = new BoardVisual(board);
         BoardFrame frame = new BoardFrame(board, "Platformer", boardVisual);
         Player player = new Player(boardVisual, board);
@@ -30,7 +30,7 @@ public class Game{
 
         Game game = new Game(board, boardVisual, frame, player);
         game.start();
-        // TODO Add plattform generation
+        // TODO Fix fullösning and add jump collision!
     }
 
     public void start(){
