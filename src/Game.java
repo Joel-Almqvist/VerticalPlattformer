@@ -2,7 +2,7 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 
 public class Game{
-    public final static int STARTING_TICKRATE = 400;
+    public final static int STARTING_TICKRATE = 900;
     private Board board;
     private BoardVisual boardVisual;
     private BoardFrame frame;
@@ -20,7 +20,7 @@ public class Game{
     }
 
     public static void main(String[] args) {
-        Board board = new Board(20, 25);
+        Board board = new Board(30, 40);
         BoardVisual boardVisual = new BoardVisual(board);
         BoardFrame frame = new BoardFrame(board, "Platformer", boardVisual);
         Player player = new Player(boardVisual, board);
@@ -31,6 +31,7 @@ public class Game{
         Game game = new Game(board, boardVisual, frame, player);
         game.start();
         // TODO Fix fullösning and add jump collision!
+        // TODO Byt tråd för timers, skapar onödigt lagg!
     }
 
     public void start(){

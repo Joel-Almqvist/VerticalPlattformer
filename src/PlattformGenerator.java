@@ -130,7 +130,7 @@ public class PlattformGenerator{
 	    }
 	}
 	*/
-	returnChunk[0][0] = BlockType.PLAYER;
+	//returnChunk[0][0] = BlockType.PLAYER;
 	return returnChunk;
 
     }

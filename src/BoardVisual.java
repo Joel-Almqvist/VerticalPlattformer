@@ -38,7 +38,7 @@ public class BoardVisual extends JComponent implements BoardListener{
             for(int c = 0; c < board.getWidth(); c++){
                 boolean empyRect = false;
 
-                BlockType type = board.getBlockAt(c,r);
+                BlockType type = board.getBlockAt(r,c);
                 switch (type) {
 
                     case AIR:
