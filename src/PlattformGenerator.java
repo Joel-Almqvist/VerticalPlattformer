@@ -20,7 +20,7 @@ public class PlattformGenerator{
     }
 
     public BlockType[][] generateChunk(BlockType[][] board){
-        BlockType[][] returnChunk = new BlockType[jumpHeight-3][boardWidth];
+        BlockType[][] returnChunk = new BlockType[jumpHeight-1][boardWidth];
         // Fill the chunk with air
         for(int c = 0; c < boardWidth; c++){
             for(int r = 0; r < returnChunk.length; r++){

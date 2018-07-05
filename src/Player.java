@@ -3,7 +3,7 @@ import java.awt.event.ActionEvent;
 
 public class Player implements BoardListener{
     private static final int FALLTIME = 50;
-    private static final int MOVEMENTSPEED = 80;
+    private static final int MOVEMENTSPEED = 50;
     private BoardVisual boardVisual;
     private Board board;
     private Timer gravityTimer;

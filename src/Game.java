@@ -2,7 +2,7 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 
 public class Game{
-    public final static int STARTING_TICKRATE = 400;
+    public final static int STARTING_TICKRATE = 350;
     private Board board;
     private BoardVisual boardVisual;
     private BoardFrame frame;
