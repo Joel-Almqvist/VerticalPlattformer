@@ -56,24 +56,12 @@ public class Board {
 		}
 	    }
 	}
-	// TODO Fix
-	//this.nextChunk = this.plattformGenerator.generateChunk(board);
-	this.nextChunk = new BlockType[][]{{}};
+	this.nextChunk = this.plattformGenerator.generateChunk(board);
+	//this.nextChunk = new BlockType[][]{{}};
 
 
     }
 
-    // TODO Remove this later on
-    public void shuffle() {
-	for (int r = 0; r < this.height; r++) {
-	    for (int c = 0; c < this.width; c++) {
-		if(r == c){
-		    board[r][c] = BlockType.PLATTFORM;
-		}
-
-	    }
-	}
-    }
     public BlockType getBlockAt(int row, int column){
         return board[row][column];
     }
@@ -161,7 +149,7 @@ public class Board {
 	    return false;
 	}
 
-	if(nextChunk[0].length == 0){
+	if(nextChunk.length == 0){
             nextChunk = plattformGenerator.generateChunk(board);
 	}
 
@@ -170,9 +158,7 @@ public class Board {
 	    for (int c = 0; c < this.width; c++) {
 	        if(r == 0){
 	            // Make the top row of board take on the next chunks blocks
-		    //board[r][c] = nextChunk[0][c];
-		    // TODO Fix this
-		    board[r][c] = BlockType.AIR;
+		    board[r][c] = nextChunk[0][c];
 
 		}
 		else {
@@ -180,12 +166,11 @@ public class Board {
 		}
 	    }
 	}
-	//System.out.println(nextChunk[0].length);
-	// TODO this will have to change in the new coordinate system
-	//for(int c = 0; c < nextChunk.length; c++){
-	//    nextChunk[c] = Arrays.copyOfRange(nextChunk[c],1,nextChunk[c].length);
-	//}
-	//System.out.println(nextChunk[0].length);
+
+	// Remove one row of the next chunk
+	nextChunk = Arrays.copyOfRange(nextChunk, 1, nextChunk.length);
+
+
 
 
 	notifyListeners();

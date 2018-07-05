@@ -1,9 +1,7 @@
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
-import java.util.function.Predicate;
 
 public class PlattformGenerator{
 
@@ -11,115 +9,50 @@ public class PlattformGenerator{
     private int jumpHeight;
     private int minDistance;
     private Random random;
-    private int amountOfPlattforms;
+    private int plattformsPerChunk;
 
     PlattformGenerator(int boardWidth, int jumpHeight, int minDistance){
         this.boardWidth = boardWidth;
         this.jumpHeight = jumpHeight;
         this.minDistance = minDistance;
 	this.random = new Random();
-	this.amountOfPlattforms = 3;
+	this.plattformsPerChunk = 5;
     }
 
     public BlockType[][] generateChunk(BlockType[][] board){
-        List<int[]> upmostPlattforms = new ArrayList<>(this.boardWidth);
-
-	// Find the upmost row with atleast one plattform in it
-	// and save the position of all plattforms in said row.
-	for(int r = 0; r < board[0].length; r++){
-             boolean foundTopRow = false;
-             for(int c = 0; c < board.length; c++){
-                 if(board[c][r] == BlockType.PLATTFORM){
- 		    upmostPlattforms.add(new int[]{c,r});
- 		    foundTopRow = true;
- 		}
- 	    }
- 	    if(foundTopRow) break;
- 	}
-
-        BlockType[][] returnChunk = new BlockType[boardWidth][jumpHeight-3];
-
+        BlockType[][] returnChunk = new BlockType[jumpHeight-3][boardWidth];
         // Fill the chunk with air
         for(int c = 0; c < boardWidth; c++){
-            for(int r = 0; r < returnChunk[0].length; r++){
-		returnChunk[c][r] = BlockType.AIR;
+            for(int r = 0; r < returnChunk.length; r++){
+		returnChunk[r][c] = BlockType.AIR;
 	    }
 	}
 
-	// Find all positions the player can jump to
-	List<int[]> reachablePositions = new LinkedList<>();
-	for(int[] pos : upmostPlattforms){
-	    for(int c = 0; c < boardWidth; c++){
-		for(int r = 0; r < returnChunk[0].length; r++){
-		    double distanceBetweenPos = Math.sqrt(Math.pow(pos[0] - c,2) + Math.pow(pos[1] - r,2));
-	    		if(distanceBetweenPos < jumpHeight-1){
-	    		    	//System.out.println("pos "+pos[0]+" , "+pos[1]+" reachable from "+c+" , "+r);
-	    		    	//System.out.println("distance = "+distanceBetweenPos);
-				reachablePositions.add(new int[]{c,r});
-			}
-	    	    }
-	    	}
-	}
+	List<BlockPoint> upmostPlattforms = getTopPlattforms(board);
+	List<BlockPoint> reachablePositions = getReachablePositions(returnChunk, upmostPlattforms);
 
-	// Find all positions within the minimum distance to a highest-point in blocks
-	// and remove them from reachablePositions
-	for(int[] pos : upmostPlattforms){
-	    for(int c = 0; c < boardWidth; c++){
-		for(int r = 0; r < returnChunk[0].length; r++){
-		    double distanceBetweenPos = Math.sqrt((pos[0] - c)^2 + (pos[1] - r)^2);
-		    if(distanceBetweenPos < minDistance){
-
-			// We have found a position to remove, now remove it
-			Iterator<int[]> iterator = reachablePositions.iterator();
-			while(iterator.hasNext()){
-			    int[] reachablePos = iterator.next();
-			    if(reachablePos[0] == c && reachablePos[1] == r){
-				iterator.remove();
-			    }
-			}
-		    }
-		}
-	    }
-	}
-
-
-	// TODO Add a check that reachablePositions exist here
-
-	// TODO Fixa denna fullösning!
-	if(reachablePositions.isEmpty()){
-	    // Find all positions the player can jump to
-	   	for(int[] pos : upmostPlattforms){
-	   	    for(int c = 0; c < boardWidth; c++){
-	   		for(int r = 0; r < returnChunk[0].length; r++){
-	   		    double distanceBetweenPos = Math.sqrt(Math.pow(pos[0] - c,2) + Math.pow(pos[1] - r,2));
-	   	    		if(distanceBetweenPos < jumpHeight-1){
-	   				reachablePositions.add(new int[]{c,r});
-	   			}
-	   	    	    }
-	   	    	}
-	   	}
-	}
+	// TODO ADD FAILSAFE SUCH THAT REACHABLE POSITIONS NEVER CAN BE EMPTY
 
 
 
 	// Choose a predefined amount of random positions
-	List<int[]> randomPositions = new ArrayList<>();
-	for(int i = 0; i < this.amountOfPlattforms; i++){
-	    int pos = random.nextInt(reachablePositions.size()-1);
-	    randomPositions.add(reachablePositions.get(pos));
-	    reachablePositions.remove(pos);
+	List<BlockPoint> randomPositions = new ArrayList<>(plattformsPerChunk+1);
+	for(int i = 0; i < this.plattformsPerChunk; i++){
+	    int randomIndex = random.nextInt(reachablePositions.size()-1);
+	    randomPositions.add(reachablePositions.get(randomIndex));
+	    reachablePositions.remove(randomIndex);
 	}
 
 
 	// Set the randomly chosen blocks to plattform and if possible
 	// also set their neighbors.
-	for(int[] pos : randomPositions){
-	    returnChunk[pos[0]][pos[1]] = BlockType.PLATTFORM;
-	    if(pos[0] > 0){
-		returnChunk[pos[0]-1][pos[1]] = BlockType.PLATTFORM;
+	for(BlockPoint pos : randomPositions){
+	    returnChunk[pos.y][pos.x] = BlockType.PLATTFORM;
+	    if(pos.x > 0){
+		returnChunk[pos.y][pos.x-1] = BlockType.PLATTFORM;
 	    }
-	    if(pos[0] < boardWidth-1){
-	    	returnChunk[pos[0]+1][pos[1]] = BlockType.PLATTFORM;
+	    if(pos.x < boardWidth-1){
+	    	returnChunk[pos.y][pos.x+1] = BlockType.PLATTFORM;
 	    }
 	}
 
@@ -135,5 +68,54 @@ public class PlattformGenerator{
 
     }
 
+    /**
+     * Returns all positions of all plattforms existing on the highest row
+     * on board with atleast one plattform.
+     */
+    private List<BlockPoint> getTopPlattforms(BlockType[][] board){
+	// Find the upmost row with atleast one plattform in it
+	// and save the position of all plattforms in said row.
+	List<BlockPoint> topPlattforms = new ArrayList<>(boardWidth+1);
+	for(int r = 0; r < board.length; r++){
+             boolean foundTopRow = false;
+             for(int c = 0; c < boardWidth; c++){
+                 if(board[r][c] == BlockType.PLATTFORM){
+ 		    topPlattforms.add(new BlockPoint(c,r,BlockType.PLATTFORM));
+ 		    foundTopRow = true;
+ 		}
+ 	    }
+ 	    if(foundTopRow) break;
+ 	}
+        return topPlattforms;
+    }
 
+
+    /** Finds all reachable positions within the given chunk which are atleast minDistance
+     *  away from an upmost position.
+     *
+     * @param chunk The chunk to which the positions relate to
+     * @param topPlattforms A list with positions of all the currently upmost plattforms within
+     *                      the main board.
+     * @return A list of all the positions within chunk which the player can reach and which are
+     * atleast of distance minDistance.
+     */
+    private List<BlockPoint> getReachablePositions(BlockType[][] chunk, List<BlockPoint> topPlattforms){
+	List<BlockPoint> reachablePositions = new ArrayList<>();
+	// The distance between the highest plattform within the main board
+	// and the start of the chunk.
+	int heightOffset = topPlattforms.get(0).y+1;
+	for(BlockPoint pos : topPlattforms){
+	    for(int c = 0; c < boardWidth; c++){
+		for(int r = 0; r < chunk.length; r++){
+		    BlockPoint chunkPoint = new BlockPoint(c,r+heightOffset,null);
+		    if(pos.distanceTo(chunkPoint) < jumpHeight -1 && pos.distanceTo(chunkPoint) >= minDistance){
+		        // Remove the offset so we save the actuall position within the chunk
+		        chunkPoint.y -= heightOffset;
+		        reachablePositions.add(chunkPoint);
+		    }
+		}
+	    }
+	}
+	return reachablePositions;
+    }
 }
