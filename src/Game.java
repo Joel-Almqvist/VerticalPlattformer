@@ -4,7 +4,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 public class Game{
-    public final static int STARTING_TICKRATE = 350;
+    public final static int STARTING_TICKRATE = 400;
     private Board board;
     private BoardVisual boardVisual;
     private BoardFrame frame;
@@ -34,8 +34,9 @@ public class Game{
         Game game = new Game(board, boardVisual, frame, player);
         game.start();
         // TODO Fix fullösning and add jump collision!
-        // TODO Fixa en klass som håller i alla chunks och generar nya vid behov,
-        // TODO denna klass behöver ha en egen tråd
+
+        // TODO Skapa en asynkron lista/kö som board läser ifrån och ChunkHandler
+        // TODO lägger till i.   Hur bör problemet med en tom lista hanteras? Board får aldrig tömma listan
     }
 
     public void start(){

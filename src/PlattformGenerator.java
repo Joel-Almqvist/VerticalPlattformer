@@ -1,20 +1,21 @@
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 
 public class PlattformGenerator{
-
     private int boardWidth;
     private int jumpHeight;
     private int minDistance;
     private Random random;
     private int plattformsPerChunk;
 
-    PlattformGenerator(int boardWidth, int jumpHeight, int minDistance){
+    public final static int JUMPHEIGHT = 8;
+    public final static int MINDISTANCE = 3;
+
+    PlattformGenerator(int boardWidth){
         this.boardWidth = boardWidth;
-        this.jumpHeight = jumpHeight;
-        this.minDistance = minDistance;
+        this.jumpHeight = JUMPHEIGHT;
+        this.minDistance = MINDISTANCE;
 	this.random = new Random();
 	this.plattformsPerChunk = 5;
     }

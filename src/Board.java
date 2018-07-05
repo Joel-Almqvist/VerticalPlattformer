@@ -7,10 +7,9 @@ public class Board {
     private int height;
     private BlockType[][] board;
     private BlockType[][] nextChunk = null;
-    private BlockType[] nextRow = null;
-    private PlattformGenerator plattformGenerator;
-    // TODO remove below
-    //private int[] playerPos = null;
+    private int nextChunkIndex = 0;
+    private ChunkHandler chunkHandler;
+    //private PlattformGenerator plattformGenerator;
     private BlockPoint playerPos = null;
     private List<BoardListener> boardListeners;
 
@@ -28,8 +27,8 @@ public class Board {
         this.board = new BlockType[height][width];
         this.boardListeners = new ArrayList<>();
 
-        // TODO do not hardcode this!
-        this.plattformGenerator = new PlattformGenerator(width,8,3);
+
+        //this.plattformGenerator = new PlattformGenerator(width);
 
         // TODO This should not be here
 	this.init();
@@ -57,7 +56,16 @@ public class Board {
 		}
 	    }
 	}
-	this.nextChunk = this.plattformGenerator.generateChunk(board);
+	this.chunkHandler = new ChunkHandler(board);
+	Thread t = new Thread(this.chunkHandler);
+	t.start();
+
+	while(!this.chunkHandler.initCompleted){
+	}
+
+	this.nextChunk = this.chunkHandler.getNextChunk();
+
+	//this.nextChunk = this.plattformGenerator.generateChunk(board);
 	//this.nextChunk = new BlockType[][]{{}};
 
 
@@ -145,7 +153,7 @@ public class Board {
      * Moves every block one step down to its original position. Currently the top row
      * is filled with air. The return value signals whether the player died in this shift or not.
      */
-    public boolean shiftDown(){
+    public boolean shiftDownOld(){
         if(playerPos.x == this.height -1) {
 	    return false;
 	}
@@ -166,15 +174,46 @@ public class Board {
 	    }
 	}
 	notifyListeners();
-
-
 	// Remove one row of the next chunk
 	nextChunk = Arrays.copyOfRange(nextChunk, 1, nextChunk.length);
 	if(nextChunk.length == 0){
-            nextChunk = plattformGenerator.generateChunk(board);
+	    nextChunk = chunkHandler.getNextChunk();
+            //nextChunk = plattformGenerator.generateChunk(board);
 	}
-
-
 	return true;
     }
+
+
+    public boolean shiftDown(){
+            if(playerPos.x == this.height -1) {
+    	    return false;
+    	}
+
+    	BlockType[][] newBoard = new BlockType[height][];
+	//BlockType[][] newBoard = Arrays.copyOfRange(board, 1, height);
+
+	for(int i = height-1; i >= 0; i--){
+	    if(i == 0){
+	        newBoard[i] = nextChunk[nextChunkIndex];
+	    }
+	    else {
+		newBoard[i] = board[i - 1];
+	    }
+	}
+
+    	playerPos.y++;
+	this.board = newBoard;
+    	notifyListeners();
+
+    	if(nextChunkIndex + 1 == nextChunk.length){
+    	    nextChunk = chunkHandler.getNextChunk();
+    	    nextChunkIndex = 0;
+                //nextChunk = plattformGenerator.generateChunk(board);
+    	}
+    	else{
+    	    nextChunkIndex++;
+	}
+    	return true;
+        }
+
 }
