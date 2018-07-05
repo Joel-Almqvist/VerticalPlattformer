@@ -7,6 +7,7 @@ public class Board {
     private int height;
     private BlockType[][] board;
     private BlockType[][] nextChunk = null;
+    private BlockType[] nextRow = null;
     private PlattformGenerator plattformGenerator;
     // TODO remove below
     //private int[] playerPos = null;
@@ -149,9 +150,7 @@ public class Board {
 	    return false;
 	}
 
-	if(nextChunk.length == 0){
-            nextChunk = plattformGenerator.generateChunk(board);
-	}
+	//this.nextRow = nextChunk[0];
 
 	playerPos.y++;
 	for (int r = this.height-1; r >= 0; r--) {
@@ -166,14 +165,16 @@ public class Board {
 		}
 	    }
 	}
+	notifyListeners();
+
 
 	// Remove one row of the next chunk
 	nextChunk = Arrays.copyOfRange(nextChunk, 1, nextChunk.length);
+	if(nextChunk.length == 0){
+            nextChunk = plattformGenerator.generateChunk(board);
+	}
 
 
-
-
-	notifyListeners();
 	return true;
     }
 }
