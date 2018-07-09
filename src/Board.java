@@ -11,7 +11,7 @@ public class Board {
     private BlockType[][] nextChunk = null;
     private int nextChunkIndex = 0;
     private ChunkHandler chunkHandler;
-    //private PlattformGenerator plattformGenerator;
+    //private ChunkGenerator plattformGenerator;
     private BlockPoint playerPos = null;
     private List<BoardListener> boardListeners;
     private int currentHighscore = 0;

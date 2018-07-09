@@ -2,7 +2,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class PlattformGenerator{
+public class ChunkGenerator
+{
     private int boardWidth;
     private int jumpHeight;
     private int minDistance;
@@ -12,7 +13,7 @@ public class PlattformGenerator{
     public final static int JUMPHEIGHT = 8;
     public final static int MINDISTANCE = 3;
 
-    PlattformGenerator(int boardWidth){
+    ChunkGenerator(int boardWidth){
         this.boardWidth = boardWidth;
         this.jumpHeight = JUMPHEIGHT;
         this.minDistance = MINDISTANCE;
@@ -57,14 +58,6 @@ public class PlattformGenerator{
 	    }
 	}
 
-	/*
-	for(int i = 0; i < returnChunk.length; i++){
-	    for(int j = 0; j < returnChunk[0].length; j++){
-		System.out.println(returnChunk[i][j]);
-	    }
-	}
-	*/
-	//returnChunk[0][0] = BlockType.PLAYER;
 	return returnChunk;
 
     }

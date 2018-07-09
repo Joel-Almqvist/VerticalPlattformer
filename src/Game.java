@@ -30,6 +30,15 @@ public class Game{
 
         Game game = new Game(board, boardVisual, frame, player);
         game.start();
+
+
+        // TODO 1 - Lägg till powerups
+        // TODO 2 - Lägg till nya plattforms typer (super trampolin?, no-collision trampolin, osv)
+        // TODO 3 - Förbättra plattforms genereringen (tänk på kollision vid hopp)
+
+        // Note för 3an, lägg till en "kollisions avstånds"-funktion i BlockPoint
+
+
     }
 
     public void start(){

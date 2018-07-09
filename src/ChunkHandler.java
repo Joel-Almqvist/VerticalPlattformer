@@ -6,7 +6,7 @@ import java.util.TimerTask;
 public class ChunkHandler implements Runnable {
     private List<BlockType[][]> chunks;
     private int boardWidth;
-    private PlattformGenerator plattformGenerator;
+    private ChunkGenerator chunkGenerator;
     private Timer generationTimer;
 
     public boolean initCompleted = false;
@@ -16,9 +16,9 @@ public class ChunkHandler implements Runnable {
     public ChunkHandler(BlockType[][] board){
         this.chunks = new ArrayList<>(CHUNK_CAPACITY+1);
         this.boardWidth = board[0].length;
-        this.plattformGenerator = new PlattformGenerator(boardWidth);
+        this.chunkGenerator = new ChunkGenerator(boardWidth);
 	this.generationTimer = new Timer(true);
-	this.chunks.add(plattformGenerator.generateChunk(board));
+	this.chunks.add(chunkGenerator.generateChunk(board));
     }
 
     public void run(){
@@ -46,7 +46,7 @@ public class ChunkHandler implements Runnable {
         if(this.chunks.size() < CHUNK_CAPACITY) {
 	    //System.out.println("generating chunk");
 	    BlockType[][] lastChunk = this.chunks.get(this.chunks.size() - 1);
-	    BlockType[][] newChunk = plattformGenerator.generateChunk(invertChunk(lastChunk));
+	    BlockType[][] newChunk = chunkGenerator.generateChunk(invertChunk(lastChunk));
 	    this.chunks.add(newChunk);
 	}
     }
