@@ -17,7 +17,7 @@ public class ChunkHandler implements Runnable {
         this.chunks = new ArrayList<>(CHUNK_CAPACITY+1);
         this.boardWidth = board[0].length;
         this.plattformGenerator = new PlattformGenerator(boardWidth);
-	this.generationTimer = new Timer();
+	this.generationTimer = new Timer(true);
 	this.chunks.add(plattformGenerator.generateChunk(board));
     }
 
