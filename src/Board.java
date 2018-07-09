@@ -56,19 +56,12 @@ public class Board {
 		}
 	    }
 	}
+	// Initialize the chunkHandler with the new board data
 	this.chunkHandler = new ChunkHandler(board);
 	Thread t = new Thread(this.chunkHandler);
+	this.chunkHandler.fillList();
 	t.start();
-
-	while(!this.chunkHandler.initCompleted){
-	}
-
 	this.nextChunk = this.chunkHandler.getNextChunk();
-
-	//this.nextChunk = this.plattformGenerator.generateChunk(board);
-	//this.nextChunk = new BlockType[][]{{}};
-
-
     }
 
     public BlockType getBlockAt(int row, int column){
@@ -149,49 +142,18 @@ public class Board {
 	}
     }
 
-    /**
-     * Moves every block one step down to its original position. Currently the top row
-     * is filled with air. The return value signals whether the player died in this shift or not.
+
+    /** Moves every block in board one step down.
+     *
+     * @return Signals whether the player survives the shift or not. True means that
+     * the game goes on.
      */
-    public boolean shiftDownOld(){
-        if(playerPos.x == this.height -1) {
-	    return false;
-	}
-
-	//this.nextRow = nextChunk[0];
-
-	playerPos.y++;
-	for (int r = this.height-1; r >= 0; r--) {
-	    for (int c = 0; c < this.width; c++) {
-	        if(r == 0){
-	            // Make the top row of board take on the next chunks blocks
-		    board[r][c] = nextChunk[0][c];
-
-		}
-		else {
-		    board[r][c] = board[r-1][c];
-		}
-	    }
-	}
-	notifyListeners();
-	// Remove one row of the next chunk
-	nextChunk = Arrays.copyOfRange(nextChunk, 1, nextChunk.length);
-	if(nextChunk.length == 0){
-	    nextChunk = chunkHandler.getNextChunk();
-            //nextChunk = plattformGenerator.generateChunk(board);
-	}
-	return true;
-    }
-
-
     public boolean shiftDown(){
             if(playerPos.x == this.height -1) {
     	    return false;
     	}
 
     	BlockType[][] newBoard = new BlockType[height][];
-	//BlockType[][] newBoard = Arrays.copyOfRange(board, 1, height);
-
 	for(int i = height-1; i >= 0; i--){
 	    if(i == 0){
 	        newBoard[i] = nextChunk[nextChunkIndex];
@@ -203,12 +165,13 @@ public class Board {
 
     	playerPos.y++;
 	this.board = newBoard;
-    	notifyListeners();
+	notifyListeners();
 
+	// Update the nextchunk traverse index and ask for a new chunk if
+	// the last row of the chunk was used.
     	if(nextChunkIndex + 1 == nextChunk.length){
     	    nextChunk = chunkHandler.getNextChunk();
     	    nextChunkIndex = 0;
-                //nextChunk = plattformGenerator.generateChunk(board);
     	}
     	else{
     	    nextChunkIndex++;
@@ -216,4 +179,7 @@ public class Board {
     	return true;
         }
 
+        public BlockType[][] getBoard(){
+        	return this.board;
+	}
 }

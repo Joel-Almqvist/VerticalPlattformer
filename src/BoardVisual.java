@@ -34,16 +34,11 @@ public class BoardVisual extends JComponent implements BoardListener{
     protected void paintComponent(Graphics g){
         super.paintComponent(g);
         final Graphics2D g2d = (Graphics2D) g;
+        BlockType[][] currentBoard = this.board.getBoard();
         for(int r = 0; r < board.getHeight(); r++){
             for(int c = 0; c < board.getWidth(); c++){
-                boolean empyRect = false;
-
-                BlockType type = board.getBlockAt(r,c);
+                BlockType type = currentBoard[r][c];
                 switch (type) {
-
-                    case AIR:
-                        g2d.setColor(Color.WHITE);
-                        break;
                     case PLAYER:
                         g2d.setColor(Color.RED);
                         break;
@@ -51,8 +46,7 @@ public class BoardVisual extends JComponent implements BoardListener{
                         g2d.setColor(Color.BLACK);
                         break;
                     default:
-                        //g2d.setColor(Color.BLACK);
-                        //empyRect = true;
+                        g2d.setColor(Color.WHITE);
                         break;
                     }
 

@@ -10,7 +10,7 @@ public class ChunkHandler implements Runnable {
     private Timer generationTimer;
 
     public boolean initCompleted = false;
-    public final static int CHUNK_GENERATION_INTERVAL = 500;
+    public final static int CHUNK_GENERATION_INTERVAL = 2000;
     public final static int CHUNK_CAPACITY = 4;
 
     public ChunkHandler(BlockType[][] board){
@@ -22,9 +22,6 @@ public class ChunkHandler implements Runnable {
     }
 
     public void run(){
-        for(int i = 0; i < CHUNK_CAPACITY; i++){
-            generateChunk();
-	}
 	this.generationTimer.scheduleAtFixedRate(new TimerTask(){
      		@Override
      		public void run(){
@@ -34,11 +31,20 @@ public class ChunkHandler implements Runnable {
 	this.initCompleted = true;
     }
 
+    /** Used to fill the ChunkHandler's chunk list manually
+     */
+    public void fillList(){
+	for(int i = 0; i < CHUNK_CAPACITY-chunks.size(); i++){
+	    generateChunk();
+	}
+    }
+
+
     /** Create a new chunk based on the appearance of the last chunk in the chunk-list
      */
     private void generateChunk(){
-        System.out.println("generating chunk");
         if(this.chunks.size() < CHUNK_CAPACITY) {
+	    //System.out.println("generating chunk");
 	    BlockType[][] lastChunk = this.chunks.get(this.chunks.size() - 1);
 	    BlockType[][] newChunk = plattformGenerator.generateChunk(invertChunk(lastChunk));
 	    this.chunks.add(newChunk);

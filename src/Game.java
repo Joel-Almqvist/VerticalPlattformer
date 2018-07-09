@@ -4,7 +4,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 public class Game{
-    public final static int STARTING_TICKRATE = 400;
+    public final static int TICKRATE = 500;
     private Board board;
     private BoardVisual boardVisual;
     private BoardFrame frame;
@@ -17,13 +17,13 @@ public class Game{
         this.boardVisual = boardVisual;
         this.frame = frame;
         this.player = player;
-        this.tickrate = STARTING_TICKRATE;
+        this.tickrate = TICKRATE;
         //this.gameTimer = new Timer(this.tickrate, shiftWorld);
-        this.gameTimer = new Timer();
+        this.gameTimer = new Timer(true);
     }
 
     public static void main(String[] args) {
-        Board board = new Board(30, 40);
+        Board board = new Board(35, 40);
         BoardVisual boardVisual = new BoardVisual(board);
         BoardFrame frame = new BoardFrame(board, "Platformer", boardVisual);
         Player player = new Player(boardVisual, board);
@@ -35,32 +35,22 @@ public class Game{
         game.start();
         // TODO Fix fullösning and add jump collision!
 
-        // TODO Skapa en asynkron lista/kö som board läser ifrån och ChunkHandler
-        // TODO lägger till i.   Hur bör problemet med en tom lista hanteras? Board får aldrig tömma listan
+        // TODO Städa upp koden
+        // TODO Fixa initialiseringen av ChunkHandler
     }
 
     public void start(){
         this.gameTimer.scheduleAtFixedRate(new TimerTask(){
             @Override
-            public void run(){
-                if(!player.playerAlive() || !board.shiftDown()) {
-                             gameTimer.cancel();
-                             player.stop();
-                             System.out.println("GAME OVER");
-                         }
+            public void run() {
+                boolean isGameOver = !board.shiftDown();
+                if (!player.playerAlive() || isGameOver) {
+                    gameTimer.cancel();
+                    player.stop();
+                    System.out.println("GAME OVER");
+                }
             }
-        },STARTING_TICKRATE,STARTING_TICKRATE);
-        //this.gameTimer.start();
+        }, TICKRATE, TICKRATE);
     }
 
-    private Action shiftWorld = new AbstractAction(){
-     @Override
-     public void actionPerformed(ActionEvent e){
-         if(!player.playerAlive() || !board.shiftDown()) {
-             //gameTimer.stop();
-             player.stop();
-             System.out.println("GAME OVER");
-         }
-     }
-    };
 }
