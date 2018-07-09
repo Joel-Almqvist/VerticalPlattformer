@@ -64,15 +64,14 @@ public class Board {
     }
 
     public boolean playerIsFloating(){
-        if(playerPos.y == this.height -1){
+        if(playerPos.y == height-1){
             return true;
 	}
 	return !board[playerPos.y+1][playerPos.x].SOLID;
     }
 
-    // TODO add out of bounds check
     public void movePlayerRight(){
-        if(!board[playerPos.y][playerPos.x+1].SOLID) {
+        if(playerPos.x != width-1 && !board[playerPos.y][playerPos.x+1].SOLID) {
 	    board[playerPos.y][playerPos.x] = BlockType.AIR;
 	    playerPos.x += 1;
 	    board[playerPos.y][playerPos.x] = BlockType.PLAYER;
@@ -81,9 +80,8 @@ public class Board {
 
     }
 
-    // TODO add out of bounds check
     public void movePlayerLeft(){
-	if(!board[playerPos.y][playerPos.x-1].SOLID) {
+	if(playerPos.x != 0 && !board[playerPos.y][playerPos.x-1].SOLID) {
 	    board[playerPos.y][playerPos.x] = BlockType.AIR;
 	    playerPos.x -= 1;
 	    board[playerPos.y][playerPos.x] = BlockType.PLAYER;
@@ -144,7 +142,7 @@ public class Board {
      * the game goes on.
      */
     public boolean shiftDown(){
-            if(playerPos.x == this.height -1) {
+            if(playerPos.y == this.height -1) {
     	    return false;
     	}
 
