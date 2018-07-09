@@ -16,8 +16,7 @@ public class Game{
         this.frame = frame;
         this.player = player;
         this.tickrate = TICKRATE;
-        //this.gameTimer = new Timer(this.tickrate, shiftWorld);
-        this.gameTimer = new Timer(true);
+        this.gameTimer = new Timer();
     }
 
     public static void main(String[] args) {
