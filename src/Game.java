@@ -20,7 +20,7 @@ public class Game{
     }
 
     public static void main(String[] args) {
-        Board board = new Board(25, 35);
+        Board board = new Board(26, 35);
         BoardVisual boardVisual = new BoardVisual(board);
         BoardFrame frame = new BoardFrame(board, "Platformer", boardVisual);
         Player player = new Player(boardVisual, board);

@@ -2,7 +2,7 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 
 public class Player implements BoardListener{
-    private static final int FALLTIME = 50;
+    private static final int FALLTIME = 100;
     private static final int MOVEMENTSPEED = 60;
     private BoardVisual boardVisual;
     private Board board;
@@ -10,17 +10,18 @@ public class Player implements BoardListener{
     private Timer movementTimer;
     private boolean movingRight;
     private boolean alive = true;
+    private int jumpHeight;
 
     public Player(BoardVisual boardVisual, Board board) {
-
 	this.boardVisual = boardVisual;
 	this.board = board;
 
-	gravityTimer = new Timer(FALLTIME, fallDown);
-	gravityTimer.setRepeats(false);
+	this.gravityTimer = new Timer(FALLTIME, fallDown);
+	this.gravityTimer.setRepeats(false);
 
-	movementTimer = new Timer(MOVEMENTSPEED, autoMovePlayer);
-	movingRight = true;
+	this.movementTimer = new Timer(MOVEMENTSPEED, autoMovePlayer);
+	this.movingRight = true;
+	this.jumpHeight = 8;
 	setUpKeyBinds();
     }
 
@@ -95,7 +96,7 @@ public class Player implements BoardListener{
      public void actionPerformed(ActionEvent e){
          gravityTimer.stop();
          gravityTimer.start();
-	 board.jump();
+	 board.jump(jumpHeight);
  	}
     };
 
