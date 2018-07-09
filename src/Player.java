@@ -1,6 +1,10 @@
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 
+/** The Player class maps player action to their corresponding keybinding to BoardVisual
+ *  and communicates to Board how to change the board state through player action.
+ *
+ */
 public class Player implements BoardListener{
     private static final int FALLTIME = 100;
     private static final int MOVEMENTSPEED = 60;

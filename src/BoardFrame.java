@@ -3,14 +3,14 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+/** BoardFrame is the JFrame upon which BoardVisual is drawn.
+ *  To do this BoardFrame needs a BoardVisual to add.
+ *
+ */
 public class BoardFrame extends JFrame{
-    public Board board;
-    private BoardVisual comp;
 
-    public BoardFrame(Board board, String windowName, BoardVisual comp) throws HeadlessException {
+    public BoardFrame(String windowName, BoardVisual comp) throws HeadlessException {
         super(windowName);
-        this.board = board;
-        this.comp = comp;
 
         //setUpKeyBinds();
         createMenus();

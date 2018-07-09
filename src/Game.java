@@ -22,7 +22,7 @@ public class Game{
     public static void main(String[] args) {
         Board board = new Board(26, 35);
         BoardVisual boardVisual = new BoardVisual(board);
-        BoardFrame frame = new BoardFrame(board, "Platformer", boardVisual);
+        BoardFrame frame = new BoardFrame("Platformer", boardVisual);
         Player player = new Player(boardVisual, board);
 
         board.addBoardListener(boardVisual);
@@ -30,9 +30,6 @@ public class Game{
 
         Game game = new Game(board, boardVisual, frame, player);
         game.start();
-        // TODO Fix fullösning and add jump collision!
-
-        // TODO Fixa initialiseringen av ChunkHandler
     }
 
     public void start(){
@@ -44,6 +41,7 @@ public class Game{
                     gameTimer.cancel();
                     player.stop();
                     System.out.println("GAME OVER");
+                    System.out.println("You got "+board.getHighscore()+" points!");
                 }
             }
         }, TICKRATE, TICKRATE);

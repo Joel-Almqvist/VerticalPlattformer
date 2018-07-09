@@ -1,7 +1,9 @@
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
+/** Board is responsible for storing data related to board and manipulating it
+ *  however is seen fit.
+ */
 public class Board {
     private int width;
     private int height;
@@ -12,8 +14,9 @@ public class Board {
     //private PlattformGenerator plattformGenerator;
     private BlockPoint playerPos = null;
     private List<BoardListener> boardListeners;
-
-    // The amount of rows the player stands on upon game start
+    private int currentHighscore = 0;
+    private int topHighscore = 0;
+    /** The amount of rows the player stands on upon game start */
     public static final int STARTING_ROWS = 8;
 
     public int getHeight(){
@@ -124,6 +127,7 @@ public class Board {
 	    board[playerPos.y][playerPos.x] = BlockType.AIR;
 	    playerPos.y += 1;
 	    board[playerPos.y][playerPos.x] = BlockType.PLAYER;
+	    updateHighscore(-1);
 	    notifyListeners();
 	}
 	else{
@@ -141,6 +145,7 @@ public class Board {
 		    board[playerPos.y][playerPos.x] = BlockType.AIR;
 		    playerPos.y -= 1;
 		    board[playerPos.y][playerPos.x] = BlockType.PLAYER;
+		    updateHighscore(1);
 		    notifyListeners();
 		} else {
 		    break;
@@ -198,5 +203,16 @@ public class Board {
 
         public BlockType[][] getBoard(){
         	return this.board;
+	}
+
+	private void updateHighscore(int stepsUp){
+            currentHighscore += stepsUp;
+            if(currentHighscore > topHighscore){
+                topHighscore = currentHighscore;
+	    }
+	}
+
+	public int getHighscore(){
+	    return topHighscore;
 	}
 }

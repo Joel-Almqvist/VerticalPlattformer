@@ -1,9 +1,9 @@
 import javax.swing.*;
 import java.awt.*;
 
+/** BoardVisual draws the current state of Board within BoardFrame.
+ */
 public class BoardVisual extends JComponent implements BoardListener{
-
-
     public Board board;
     public final static int RECTANGLE_HEIGHT = 20;
     public final static int RECTANGLE_WIDTH = 20;
