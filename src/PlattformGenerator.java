@@ -96,7 +96,8 @@ public class PlattformGenerator{
      *
      * @param chunk The chunk to which the positions relate to
      * @param topPlattforms A list with positions of all the currently upmost plattforms within
-     *                      the main board.
+     *                      the main board. (They are neccesarily on the same row)
+     *
      * @return A list of all the positions within chunk which the player can reach and which are
      * atleast of distance minDistance.
      */

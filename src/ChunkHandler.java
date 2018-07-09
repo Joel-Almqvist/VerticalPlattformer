@@ -40,7 +40,7 @@ public class ChunkHandler implements Runnable {
     }
 
 
-    /** Create a new chunk based on the appearance of the last chunk in the chunk-list
+    /** Create a new chunk based on the appearance of the last chunk in the chunk-list.
      */
     private void generateChunk(){
         if(this.chunks.size() < CHUNK_CAPACITY) {

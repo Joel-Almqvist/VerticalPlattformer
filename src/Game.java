@@ -1,5 +1,3 @@
-import javax.swing.*;
-import java.awt.event.ActionEvent;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -23,7 +21,7 @@ public class Game{
     }
 
     public static void main(String[] args) {
-        Board board = new Board(35, 40);
+        Board board = new Board(25, 35);
         BoardVisual boardVisual = new BoardVisual(board);
         BoardFrame frame = new BoardFrame(board, "Platformer", boardVisual);
         Player player = new Player(boardVisual, board);
@@ -35,7 +33,6 @@ public class Game{
         game.start();
         // TODO Fix fullösning and add jump collision!
 
-        // TODO Städa upp koden
         // TODO Fixa initialiseringen av ChunkHandler
     }
 

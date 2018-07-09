@@ -29,7 +29,7 @@ public class Player implements BoardListener{
 	 boardVisual.getActionMap().put("moveRightPress", moveRightPress);
 
 	 boardVisual.getInputMap().put(KeyStroke.getKeyStroke("released RIGHT"), "moveRightRelease");
-	 	 boardVisual.getActionMap().put("moveRightRelease", stopMovement);
+	 boardVisual.getActionMap().put("moveRightRelease", stopMovement);
 
 	 boardVisual.getInputMap().put(KeyStroke.getKeyStroke("LEFT"), "moveLeftPress");
 	 boardVisual.getActionMap().put("moveLeftPress", moveLeftPress);

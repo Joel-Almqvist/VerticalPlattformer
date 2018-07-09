@@ -26,18 +26,13 @@ public class Board {
         this.height = height;
         this.board = new BlockType[height][width];
         this.boardListeners = new ArrayList<>();
-
-
-        //this.plattformGenerator = new PlattformGenerator(width);
-
-        // TODO This should not be here
 	this.init();
     }
 
     /**
      * Initializes all blocktypes in the board to plattform or air
      */
-    public void init() {
+    private void init() {
 	for (int r = 0; r < this.height; r++) {
 	    for (int c = 0; c < this.width; c++) {
 	        if (r > this.height-9 || c == 0) {
