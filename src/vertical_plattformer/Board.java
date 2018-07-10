@@ -1,7 +1,9 @@
+package vertical_plattformer;
+
 import java.util.ArrayList;
 import java.util.List;
 
-/** Board is responsible for storing data related to board and manipulating it
+/** vertical_plattformer.Board is responsible for storing data related to board and manipulating it
  *  however is seen fit.
  */
 public class Board {
@@ -11,7 +13,7 @@ public class Board {
     private BlockType[][] nextChunk = null;
     private int nextChunkIndex = 0;
     private ChunkHandler chunkHandler;
-    //private ChunkGenerator plattformGenerator;
+    //private vertical_plattformer.ChunkGenerator plattformGenerator;
     private BlockPoint playerPos = null;
     private List<BoardListener> boardListeners;
     private int currentHighscore = 0;
@@ -35,7 +37,7 @@ public class Board {
 	this.init();
     }
 
-    /** Initializes the board, ChunkHandler and starts the automatic generation of chunks.
+    /** Initializes the board, vertical_plattformer.ChunkHandler and starts the automatic generation of chunks.
      */
     private void init() {
 	initializeBoard();

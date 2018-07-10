@@ -1,10 +1,12 @@
+package vertical_plattformer;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-/** BoardFrame is the JFrame upon which BoardVisual is drawn.
- *  To do this BoardFrame needs a BoardVisual to add.
+/** vertical_plattformer.BoardFrame is the JFrame upon which vertical_plattformer.BoardVisual is drawn.
+ *  To do this vertical_plattformer.BoardFrame needs a vertical_plattformer.BoardVisual to add.
  *
  */
 public class BoardFrame extends JFrame{

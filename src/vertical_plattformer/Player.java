@@ -1,24 +1,29 @@
+package vertical_plattformer;
+
+import vertical_plattformer.player_actions.PlayerActions;
+
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 
-/** The Player class maps player action to their corresponding keybinding to BoardVisual
- *  and communicates to Board how to change the board state through player action.
+/** The vertical_plattformer.Player class maps player action to their corresponding keybinding to vertical_plattformer.BoardVisual
+ *  and communicates to vertical_plattformer.Board how to change the board state through player action.
+ *  Also stores information regarding the players stats, such as speed and jumping height.
  *
  */
 public class Player implements BoardListener{
     private static final int FALLTIME = 100;
     private static final int MOVEMENTSPEED = 60;
     private BoardVisual boardVisual;
-    private Board board;
     private Timer gravityTimer;
     private Timer movementTimer;
     private boolean movingRight;
     private boolean alive = true;
     private int jumpHeight;
+    private PlayerActions playerActions;
 
     public Player(BoardVisual boardVisual, Board board) {
 	this.boardVisual = boardVisual;
-	this.board = board;
+	this.playerActions = new PlayerActions(board);
 
 	this.gravityTimer = new Timer(FALLTIME, fallDown);
 	this.gravityTimer.setRepeats(false);
@@ -100,14 +105,14 @@ public class Player implements BoardListener{
      public void actionPerformed(ActionEvent e){
          gravityTimer.stop();
          gravityTimer.start();
-	 board.jump(jumpHeight);
+	 playerActions.jump(jumpHeight);
  	}
     };
 
     final private Action fallDown = new AbstractAction() {
         @Override
         public void actionPerformed(ActionEvent e) {
-            if(!board.movePlayerDown()){
+            if(!playerActions.movePlayerDown()){
                 alive = false;
                 stop();
 	    }
@@ -119,10 +124,10 @@ public class Player implements BoardListener{
         @Override
         public void actionPerformed(ActionEvent e) {
             if(movingRight){
-                board.movePlayerRight();
+                playerActions.movePlayerRight();
 	    }
 	    else{
-                board.movePlayerLeft();
+		playerActions.movePlayerLeft();
 	    }
 	}
     };
@@ -133,7 +138,7 @@ public class Player implements BoardListener{
      * move the player down one step.
      */
     public void boardChange(){
-        if(this.board.playerIsFloating()){
+        if(this.playerActions.playerIsFloating()){
 	    if(!gravityTimer.isRunning()){
 	        gravityTimer.start();
 	    }

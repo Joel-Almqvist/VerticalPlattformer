@@ -1,11 +1,13 @@
-/** BlockPoint is a node with a position and a weight. It is primarly used in
- * ChunkGenerator to generate positions to place plattforms.
+package vertical_plattformer;
+
+/** vertical_plattformer.BlockPoint is a node with a position and a weight. It is primarly used in
+ * vertical_plattformer.ChunkGenerator to generate positions to place plattforms.
  */
 public class BlockPoint{
     public int x;
     public int y;
     /** Weight is used by chooseFurthestPoints to remember the cost to traverse
-     * to a certain BlockPoint from another BlockPoint */
+     * to a certain vertical_plattformer.BlockPoint from another vertical_plattformer.BlockPoint */
     public double weight = 0;
 
     public BlockPoint(int x, int y){

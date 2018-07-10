@@ -1,7 +1,9 @@
+package vertical_plattformer;
+
 import javax.swing.*;
 import java.awt.*;
 
-/** BoardVisual draws the current state of Board within BoardFrame.
+/** vertical_plattformer.BoardVisual draws the current state of vertical_plattformer.Board within vertical_plattformer.BoardFrame.
  */
 public class BoardVisual extends JComponent implements BoardListener{
     public Board board;

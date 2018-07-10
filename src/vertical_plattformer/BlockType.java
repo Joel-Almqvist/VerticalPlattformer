@@ -1,3 +1,5 @@
+package vertical_plattformer;
+
 public enum BlockType {
     AIR(false), PLATTFORM(true), PLAYER(true);
 

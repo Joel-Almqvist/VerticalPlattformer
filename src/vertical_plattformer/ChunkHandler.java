@@ -1,3 +1,5 @@
+package vertical_plattformer;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
@@ -10,7 +12,7 @@ public class ChunkHandler implements Runnable {
     private Timer generationTimer;
 
     public boolean initCompleted = false;
-    public final static int CHUNK_GENERATION_INTERVAL = 2000;
+    public final static int CHUNK_GENERATION_INTERVAL = 1500;
     public final static int CHUNK_CAPACITY = 4;
 
     public ChunkHandler(BlockType[][] board){
@@ -31,7 +33,7 @@ public class ChunkHandler implements Runnable {
 	this.initCompleted = true;
     }
 
-    /** Used to fill the ChunkHandler's chunk list manually
+    /** Used to fill the vertical_plattformer.ChunkHandler's chunk list manually
      */
     public void fillList(){
 	for(int i = 0; i < CHUNK_CAPACITY-chunks.size(); i++){

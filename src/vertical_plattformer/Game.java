@@ -1,3 +1,5 @@
+package vertical_plattformer;
+
 import java.util.Timer;
 import java.util.TimerTask;
 

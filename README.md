@@ -1,2 +1,2 @@
 # VerticalPlattformer
-Game written from stratch för university course TDDD78
+vertical_plattformer.Game written from stratch för university course TDDD78
