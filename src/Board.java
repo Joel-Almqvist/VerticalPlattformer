@@ -60,7 +60,7 @@ public class Board {
 		// Create the player on the board
 		else if (r == height - STARTING_ROWS - 1 && c == 0) {
 		    this.board[r][c] = BlockType.PLAYER;
-		    this.playerPos = new BlockPoint(c, r, BlockType.PLAYER);
+		    this.playerPos = new BlockPoint(c, r);
 		}
 
 		// Generates a downwards slope of plattforms, most easily
