@@ -11,7 +11,7 @@ public class Game{
     private BoardVisual boardVisual;
     private BoardFrame frame;
     private Player player;
-    private java.util.Timer gameTimer;
+    private Timer gameTimer;
     private int tickrate;
 
     Game(Board board, BoardVisual boardVisual, BoardFrame frame, Player player){
@@ -38,11 +38,6 @@ public class Game{
 
         // TODO 1 - Lägg till powerups
         // TODO 2 - Lägg till nya plattforms typer (super trampolin?, no-collision trampolin, osv)
-        // TODO 3 - Förbättra plattforms genereringen (tänk på kollision vid hopp)
-        //
-        // Note för 3an, lägg till en "kollisions avstånds"-funktion i BlockPoint
-        // 3 - Kanske använd vanligt avstånd och sedan en A* sökning på de redan hittade noderna
-        // för att på så sätt se att de nåbara PÅ RIKTIGT.
 
     }
 

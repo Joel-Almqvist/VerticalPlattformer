@@ -22,7 +22,32 @@ public class ChunkGenerator
 	this.plattformsPerChunk = 5;
     }
 
-    public BlockType[][] generateChunk(BlockType[][] board){
+    /** Given a chunk generate a new chunk such that all plattforms within the new one is
+     * MINDISTANCE and JUMPHEIGHT-1 distance away from an upmost position position of the input
+     * chunk.
+     *
+     * NOTE: This function does guarantee a "solveable" chunk for the player but makes it
+     * unlikely that such a chunk would be generated.
+     *
+     * NOTE: inputChunk's index grows downwards while the generated chunk index grows upwards,
+     * see the drawing below for clarification. The generatedChunks row 0 is put atop of inputChunk row 0.
+     *
+     *GeneratedChunk:
+     * Row 2*******
+     * Row 1*******
+     * Row 0*******
+     *
+     * InputChunk:
+     * Row 0*******
+     * Row 1*******
+     * Row 2*******
+     *
+     * @param inputChunk The original state of the game upon which the generated chunk
+     *                   is going to be appended to.
+     *
+     * @return A new chunk to append to the inputChunk.
+     */
+    public BlockType[][] generateChunk(BlockType[][] inputChunk){
         BlockType[][] returnChunk = new BlockType[jumpHeight-1][boardWidth];
         // Fill the new chunk with air
         for(int c = 0; c < boardWidth; c++){
@@ -30,41 +55,13 @@ public class ChunkGenerator
 		returnChunk[r][c] = BlockType.AIR;
 	    }
 	}
-
-	List<BlockPoint> upmostPlattforms = getTopPlattforms(board);
+	// Find all plattforms on the highest row with a plattform
+	// Find all positions reachable from these upmost plattforms
+	// Make a suitable selections of the reachable positions to avoid plattforms bunching up
+	List<BlockPoint> upmostPlattforms = getTopPlattforms(inputChunk);
 	List<BlockPoint> reachablePositions = getReachablePositions(returnChunk, upmostPlattforms);
-
-	// TODO ADD FAILSAFE SUCH THAT REACHABLE POSITIONS NEVER CAN BE EMPTY
-
-
-
-	List<BlockPoint> chosenBlockPositions = new ArrayList<>();
-	for(BlockPoint start: reachablePositions){
-	    for(BlockPoint dest: reachablePositions){
-		double distance = start.distanceTo(dest);
-		if(distance > start.weight){
-		    start.weight = distance;
-		}
-		if(distance > dest.weight){
-		    dest.weight = distance;
-		}
-	    }
-	}
-
 	List<BlockPoint> chosenPositions = chooseFurthestPoints(reachablePositions, plattformsPerChunk);
 
-
-	/*  This code chooses platforms randomly from reachable positions
-
-
-	// Choose a predefined amount of random positions
-	List<BlockPoint> randomPositions = new ArrayList<>(plattformsPerChunk);
-	for(int i = 0; i < this.plattformsPerChunk; i++){
-	    int randomIndex = random.nextInt(reachablePositions.size()-1);
-	    randomPositions.add(reachablePositions.get(randomIndex));
-	    reachablePositions.remove(randomIndex);
-	}
-	*/
 
 
 	// Set the randomly chosen blocks to plattform and if possible
