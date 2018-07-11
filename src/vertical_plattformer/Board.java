@@ -15,8 +15,7 @@ public class Board {
     private ChunkHandler chunkHandler;
     private BlockPoint playerPos = null;
     private List<BoardListener> boardListeners;
-    private int currentHighscore = 0;
-    private int topHighscore = 0;
+    private HighscoreHandler highscoreHandler;
     private int jumpsSinceLanded = 0;
     /** The amount of rows the player stands on upon game start */
     public static final int STARTING_ROWS = 8;
@@ -34,6 +33,7 @@ public class Board {
         this.height = height;
         this.board = new BlockType[height][width];
         this.boardListeners = new ArrayList<>();
+        this.highscoreHandler = new HighscoreHandler();
 	this.init();
     }
 
@@ -67,9 +67,9 @@ public class Board {
 
 		// Generates a downwards slope of plattforms, most easily
 		// visualized as a discrete y = kx + m line, where:
-		// r == c   equivalent with  y = x
-		// r == 2c  equivalent with y = 2x
-		// r == (width - c) equivalent with y = -x
+		// r == c   is comparable to y = x
+		// r == 2c  is comparable to y = 2x
+		// r == (width - c) is comparable to y = -x
 		else if (r < height - STARTING_ROWS - 2 && (r == (2 * width - 2 * c) || r == (2 * width - 2 * c - 1))) {
 		    this.board[r][c] = BlockType.PLATTFORM;
 		}
@@ -86,10 +86,6 @@ public class Board {
 	}
     }
 
-
-    public BlockType getBlockAt(int row, int column){
-        return board[row][column];
-    }
 
     public boolean playerIsFloating(){
         if(playerPos.y == height-1){
@@ -141,7 +137,7 @@ public class Board {
 	    board[playerPos.y][playerPos.x] = BlockType.AIR;
 	    playerPos.y += 1;
 	    board[playerPos.y][playerPos.x] = BlockType.PLAYER;
-	    updateHighscore(-1);
+	    highscoreHandler.playerMovedUp(-1);
 	    // Reset jump counter if player is moved to a solid block
 	    if(!playerIsFloating()){
 	        jumpsSinceLanded = 0;
@@ -167,7 +163,7 @@ public class Board {
 		    board[playerPos.y][playerPos.x] = BlockType.AIR;
 		    playerPos.y -= 1;
 		    board[playerPos.y][playerPos.x] = BlockType.PLAYER;
-		    updateHighscore(1);
+		    highscoreHandler.playerMovedUp(1);
 		    notifyListeners();
 		} else {
 		    // If we can't jump at all we are on the ground
@@ -235,15 +231,8 @@ public class Board {
         	return this.board;
 	}
 
-	private void updateHighscore(int stepsUp){
-            currentHighscore += stepsUp;
-            if(currentHighscore > topHighscore){
-                topHighscore = currentHighscore;
-	    }
-	}
-
 	public int getHighscore(){
-	    return topHighscore;
+	    return highscoreHandler.getHighscore();
 	}
 
 
