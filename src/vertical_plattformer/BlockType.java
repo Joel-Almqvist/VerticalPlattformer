@@ -1,12 +1,14 @@
 package vertical_plattformer;
 
 public enum BlockType {
-    AIR(false), PLATTFORM(true), PLAYER(true);
+    AIR(false, false), PLATTFORM(true, false), PLAYER(true, false), GHOSTJUMP(true, true);
 
     public final boolean SOLID;
+    public final boolean POWERUP;
 
-    private BlockType(boolean solid){
+    private BlockType(boolean solid, boolean isPowerUp){
         SOLID = solid;
+        POWERUP = isPowerUp;
     }
 
 }

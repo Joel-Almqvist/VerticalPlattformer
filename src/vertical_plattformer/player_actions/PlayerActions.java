@@ -23,13 +23,15 @@ public class PlayerActions {
     }
 
     public boolean movePlayerDown(){
-	return true;
+	return board.movePlayerDown();
     }
 
     public boolean playerIsFloating(){
         return board.playerIsFloating();
     }
     public void jump(int height){
-        board.jump(height);
+        if(!board.playerIsFloating() || board.getJumpsSinceLanded() < 1){
+	    board.jump(height);
+	}
     }
 }

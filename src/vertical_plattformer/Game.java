@@ -8,7 +8,7 @@ public class Game{
      * NOTE: A delay less than 500 ms will likely cause
      * shifts to bunch up and execute in too quick succession.
      * */
-    public final static int TICKRATE = 500;
+    public final static int TICKRATE = 700;
     private Board board;
     private BoardVisual boardVisual;
     private BoardFrame frame;
@@ -40,6 +40,7 @@ public class Game{
 
         // TODO 1 - Lägg till powerups
         // TODO 2 - Lägg till nya plattforms typer (super trampolin?, no-collision trampolin, osv)
+        // TODO 3 - Lägg till highscore, få den att påverka ChunkGenerator för progressivt svårare banor
 
     }
 

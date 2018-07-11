@@ -11,21 +11,22 @@ public class ChunkGenerator
     private int minDistance;
     private Random random;
     private int plattformsPerChunk;
-
-    public final static int JUMPHEIGHT = 8;
+    /** How high the chunkgenerator assumes the player can jump when the game starts.*/
+    public final static int EXPECTED_STARTING_JUMPHEIGHT = 8;
+    /** The shortest distance a plattform must be from a highest place to be considered "reachable" */
     public final static int MINDISTANCE = 3;
-    public final static int INFINITY = 99999;
+    public final static int INFINITY = Integer.MAX_VALUE;
 
     ChunkGenerator(int boardWidth){
         this.boardWidth = boardWidth;
-        this.jumpHeight = JUMPHEIGHT;
+        this.jumpHeight = EXPECTED_STARTING_JUMPHEIGHT;
         this.minDistance = MINDISTANCE;
 	this.random = new Random();
 	this.plattformsPerChunk = 5;
     }
 
     /** Given a chunk generate a new chunk such that all plattforms within the new one is
-     * MINDISTANCE and JUMPHEIGHT-1 distance away from an upmost position position of the input
+     * MINDISTANCE and EXPECTED_STARTING_JUMPHEIGHT-1 distance away from an upmost position position of the input
      * chunk.
      *
      * NOTE: This function does guarantee a "solveable" chunk for the player but makes it

@@ -13,11 +13,11 @@ public class Board {
     private BlockType[][] nextChunk = null;
     private int nextChunkIndex = 0;
     private ChunkHandler chunkHandler;
-    //private vertical_plattformer.ChunkGenerator plattformGenerator;
     private BlockPoint playerPos = null;
     private List<BoardListener> boardListeners;
     private int currentHighscore = 0;
     private int topHighscore = 0;
+    private int jumpsSinceLanded = 0;
     /** The amount of rows the player stands on upon game start */
     public static final int STARTING_ROWS = 8;
 
@@ -103,6 +103,12 @@ public class Board {
 	    board[playerPos.y][playerPos.x] = BlockType.AIR;
 	    playerPos.x += 1;
 	    board[playerPos.y][playerPos.x] = BlockType.PLAYER;
+
+	    // If we move to a solid block reset jump counter
+	    if(board[playerPos.y+1][playerPos.x].SOLID){
+		jumpsSinceLanded = 0;
+	    }
+
 	    notifyListeners();
 	}
 
@@ -113,6 +119,12 @@ public class Board {
 	    board[playerPos.y][playerPos.x] = BlockType.AIR;
 	    playerPos.x -= 1;
 	    board[playerPos.y][playerPos.x] = BlockType.PLAYER;
+
+	    // If we move to a solid block reset jump counter
+	    if(board[playerPos.y+1][playerPos.x].SOLID){
+	        jumpsSinceLanded = 0;
+	    }
+
 	    notifyListeners();
 	}
     }
@@ -130,18 +142,26 @@ public class Board {
 	    playerPos.y += 1;
 	    board[playerPos.y][playerPos.x] = BlockType.PLAYER;
 	    updateHighscore(-1);
+	    // Reset jump counter if player is moved to a solid block
+	    if(!playerIsFloating()){
+	        jumpsSinceLanded = 0;
+	    }
 	    notifyListeners();
 	}
 	else{
-            System.out.println("Failed shift down");
+	    jumpsSinceLanded = 0;
+            System.out.println("Failed moving player down");
 	}
 	return true;
     }
 
 
     public void jump(int jumpHeight){
-        if(!playerIsFloating() && playerPos.y != 0) {
-
+        if(playerPos.y != 0) {
+            // Only increment jump counter if we are jumping while floating
+            if(playerIsFloating()) {
+		jumpsSinceLanded++;
+	    }
             for(int i = 0; i < jumpHeight; i++) {
 		if (playerPos.y != 0 && !board[playerPos.y - 1][playerPos.x].SOLID) {
 		    board[playerPos.y][playerPos.x] = BlockType.AIR;
@@ -150,10 +170,18 @@ public class Board {
 		    updateHighscore(1);
 		    notifyListeners();
 		} else {
+		    // If we can't jump at all we are on the ground
+		    if( i == 0){
+		        jumpsSinceLanded = 0;
+		    }
 		    break;
 		}
 	    }
 	}
+    }
+
+    public int getJumpsSinceLanded(){
+    	return jumpsSinceLanded;
     }
 
     public void addBoardListener(BoardListener bl){
@@ -217,4 +245,7 @@ public class Board {
 	public int getHighscore(){
 	    return topHighscore;
 	}
+
+
+
 }

@@ -11,8 +11,8 @@ import java.awt.event.ActionEvent;
  *
  */
 public class Player implements BoardListener{
-    private static final int FALLTIME = 100;
-    private static final int MOVEMENTSPEED = 60;
+    private static final int FALLTIME = 120;
+    private static final int MOVEMENTSPEED = 75;
     private BoardVisual boardVisual;
     private Timer gravityTimer;
     private Timer movementTimer;
@@ -30,7 +30,7 @@ public class Player implements BoardListener{
 
 	this.movementTimer = new Timer(MOVEMENTSPEED, autoMovePlayer);
 	this.movingRight = true;
-	this.jumpHeight = 8;
+	this.jumpHeight = 5;
 	setUpKeyBinds();
     }
 
