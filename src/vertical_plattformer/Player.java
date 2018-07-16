@@ -1,6 +1,7 @@
 package vertical_plattformer;
 
 import vertical_plattformer.player_actions.PlayerActions;
+import vertical_plattformer.player_actions.PlayerHighJump;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -13,6 +14,7 @@ import java.awt.event.ActionEvent;
 public class Player implements BoardListener{
     private static final int FALLTIME = 120;
     private static final int MOVEMENTSPEED = 75;
+    private Board board;
     private BoardVisual boardVisual;
     private Timer gravityTimer;
     private Timer movementTimer;
@@ -22,6 +24,7 @@ public class Player implements BoardListener{
     private PlayerActions playerActions;
 
     public Player(BoardVisual boardVisual, Board board) {
+        this.board = board;
 	this.boardVisual = boardVisual;
 	this.playerActions = new PlayerActions(board);
 
@@ -138,13 +141,30 @@ public class Player implements BoardListener{
      * move the player down one step.
      */
     public void boardChange(){
-        if(this.playerActions.playerIsFloating()){
+        checkGravity();
+        setPlayerPowerup();
+    }
+
+    /** Checks if the player is floating and if there is a countdown timer
+     * for moving him down. If there is no such timer start it.
+     */
+    public void checkGravity(){
+	if(this.playerActions.playerIsFloating()){
 	    if(!gravityTimer.isRunning()){
-	        gravityTimer.start();
+		gravityTimer.start();
 	    }
 	}
 	else{
-            gravityTimer.stop();
+	    gravityTimer.stop();
+	}
+    }
+
+
+    public void setPlayerPowerup(){
+        switch(board.getBlockUnderPlayer()){
+	    case HIGHJUMP:
+	        playerActions = new PlayerHighJump(board);
+	        break;
 	}
     }
 

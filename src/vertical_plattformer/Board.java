@@ -239,4 +239,11 @@ public class Board {
 	    return this.chunkHandler;
 
 	}
+
+	public BlockType getBlockUnderPlayer(){
+	    if(playerPos.y != height){
+		return board[playerPos.y+1][playerPos.x];
+	    }
+	    return BlockType.AIR;
+	}
 }

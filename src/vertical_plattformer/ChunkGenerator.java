@@ -16,11 +16,21 @@ public class ChunkGenerator {
     public final static int MINDISTANCE = 3;
     public final static int INFINITY = Integer.MAX_VALUE;
 
+    /** A list containing one object of every powerup BlockType */
+    private List<BlockType> allPowerUps;
+
     ChunkGenerator(int boardWidth){
         this.boardWidth = boardWidth;
         this.maxDistance = EXPECTED_STARTING_JUMPHEIGHT;
         this.minDistance = MINDISTANCE;
 	this.random = new Random();
+	this.allPowerUps = new ArrayList<>();
+
+	for(BlockType block : BlockType.values()){
+	    if(block.POWERUP){
+	        allPowerUps.add(block);
+	    }
+	}
     }
 
     /** Given a chunk generate a new chunk such that all plattforms within the new one is
@@ -68,15 +78,16 @@ public class ChunkGenerator {
 	List<BlockPoint> chosenPositions = chooseFurthestPoints(reachablePositions);
 
 
-	// Set the randomly chosen blocks to plattform and if possible
-	// also set their neighbors.
+	// Set the randomly chosen blocks to plattform or powerup randomly,
+	// and if possible also set their neighbors.
 	for(BlockPoint pos : chosenPositions){
-	    returnChunk[pos.y][pos.x] = BlockType.PLATTFORM;
+	    BlockType randomBlock = randomBlock();
+	    returnChunk[pos.y][pos.x] = randomBlock;
 	    if(pos.x > 0){
-		returnChunk[pos.y][pos.x-1] = BlockType.PLATTFORM;
+		returnChunk[pos.y][pos.x-1] = randomBlock;
 	    }
 	    if(pos.x < boardWidth-1){
-	    	returnChunk[pos.y][pos.x+1] = BlockType.PLATTFORM;
+	    	returnChunk[pos.y][pos.x+1] = randomBlock;
 	    }
 	}
 	return returnChunk;
@@ -205,5 +216,19 @@ public class ChunkGenerator {
         if(maxDistance < topBound){
             maxDistance++;
 	}
+    }
+
+    /** Returns a random powerup BlockType 10% of time and
+     * the PLATTFORM blocktype in the other cases.
+     *
+     * @return A powerup BlockType or a PLATTFORM BlockType.
+     */
+    private BlockType randomBlock(){
+        // Check whether a powerup should be chosen or not
+        if(random.nextInt(9) == 0){
+            // Return a random powerup
+            return allPowerUps.get(random.nextInt(allPowerUps.size()));
+	}
+	return BlockType.PLATTFORM;
     }
 }

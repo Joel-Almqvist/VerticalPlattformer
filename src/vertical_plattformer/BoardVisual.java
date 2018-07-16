@@ -45,8 +45,11 @@ public class BoardVisual extends JComponent implements BoardListener{
                     case PLATTFORM:
                         g2d.setColor(Color.BLACK);
                         break;
-                    default:
+                    case AIR:
                         g2d.setColor(Color.WHITE);
+                        break;
+                    default:
+                        g2d.setColor(Color.YELLOW);
                         break;
                 }
                 g2d.fillRect(RECTANGLE_WIDTH*c+c*SPACE_OFFSET,RECTANGLE_HEIGHT*r+r*SPACE_OFFSET,RECTANGLE_WIDTH,RECTANGLE_HEIGHT);
