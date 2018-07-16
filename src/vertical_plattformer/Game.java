@@ -49,8 +49,7 @@ public class Game{
 
         // TODO 1 - Lägg till powerups
         // TODO 2 - Lägg till nya plattforms typer (super trampolin?, no-collision trampolin, osv)
-        // TODO 3 - Lägg till highscore, få den att påverka ChunkGenerator för progressivt svårare banor
-
+        // TODO 3 - Visa highscore
     }
 
     /** Shifts the board once, checks if the player has reached a new level
