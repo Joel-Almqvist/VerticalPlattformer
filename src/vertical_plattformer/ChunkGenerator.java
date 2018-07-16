@@ -4,8 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class ChunkGenerator
-{
+public class ChunkGenerator {
     private int boardWidth;
     private int jumpHeight;
     private int minDistance;
@@ -22,7 +21,7 @@ public class ChunkGenerator
         this.jumpHeight = EXPECTED_STARTING_JUMPHEIGHT;
         this.minDistance = MINDISTANCE;
 	this.random = new Random();
-	this.plattformsPerChunk = 5;
+	this.plattformsPerChunk = 1;
     }
 
     /** Given a chunk generate a new chunk such that all plattforms within the new one is
@@ -51,7 +50,8 @@ public class ChunkGenerator
      * @return A new chunk to append to the inputChunk.
      */
     public BlockType[][] generateChunk(BlockType[][] inputChunk){
-        BlockType[][] returnChunk = new BlockType[jumpHeight-1][boardWidth];
+        // A chunk must never be higher than the player can jump
+        BlockType[][] returnChunk = new BlockType[EXPECTED_STARTING_JUMPHEIGHT-1][boardWidth];
         // Fill the new chunk with air
         for(int c = 0; c < boardWidth; c++){
             for(int r = 0; r < returnChunk.length; r++){
@@ -63,6 +63,9 @@ public class ChunkGenerator
 	// Make a suitable selections of the reachable positions to avoid plattforms bunching up
 	List<BlockPoint> upmostPlattforms = getTopPlattforms(inputChunk);
 	List<BlockPoint> reachablePositions = getReachablePositions(returnChunk, upmostPlattforms);
+	if(reachablePositions.isEmpty()){
+	    System.out.println("No reachable positions");
+	}
 	List<BlockPoint> chosenPositions = chooseFurthestPoints(reachablePositions, plattformsPerChunk);
 
 

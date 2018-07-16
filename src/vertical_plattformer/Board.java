@@ -28,21 +28,21 @@ public class Board {
         return this.width;
     }
 
-    public Board(int width, int height){
+    public Board(int width, int height, int lowestShiftRate){
         this.width = width;
         this.height = height;
         this.board = new BlockType[height][width];
         this.boardListeners = new ArrayList<>();
         this.highscoreHandler = new HighscoreHandler();
-	this.init();
+	this.init(lowestShiftRate);
     }
 
     /** Initializes the board, vertical_plattformer.ChunkHandler and starts the automatic generation of chunks.
      */
-    private void init() {
+    private void init(int lowestShiftRate) {
 	initializeBoard();
 	// Initialize the chunkHandler with the new board data
-	this.chunkHandler = new ChunkHandler(board);
+	this.chunkHandler = new ChunkHandler(board, lowestShiftRate);
 	Thread t = new Thread(this.chunkHandler);
 	this.chunkHandler.fillList();
 	t.start();
@@ -101,7 +101,7 @@ public class Board {
 	    board[playerPos.y][playerPos.x] = BlockType.PLAYER;
 
 	    // If we move to a solid block reset jump counter
-	    if(board[playerPos.y+1][playerPos.x].SOLID){
+	    if(playerPos.y != height-1 && board[playerPos.y+1][playerPos.x].SOLID){
 		jumpsSinceLanded = 0;
 	    }
 
@@ -117,7 +117,7 @@ public class Board {
 	    board[playerPos.y][playerPos.x] = BlockType.PLAYER;
 
 	    // If we move to a solid block reset jump counter
-	    if(board[playerPos.y+1][playerPos.x].SOLID){
+	    if(playerPos.y != height-1 && board[playerPos.y+1][playerPos.x].SOLID){
 	        jumpsSinceLanded = 0;
 	    }
 
@@ -235,6 +235,8 @@ public class Board {
 	    return highscoreHandler.getHighscore();
 	}
 
+	public ChunkHandler getChunkHandler(){
+	    return this.chunkHandler;
 
-
+	}
 }

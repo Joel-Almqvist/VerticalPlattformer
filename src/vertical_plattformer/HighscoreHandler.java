@@ -1,7 +1,6 @@
 package vertical_plattformer;
 
-public class HighscoreHandler
-{
+public class HighscoreHandler {
     private int currentPlayerHeight;
     private int topPlayerHeight;
 
