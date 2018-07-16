@@ -6,10 +6,10 @@ import java.util.Random;
 
 public class ChunkGenerator {
     private int boardWidth;
-    private int jumpHeight;
+    private int maxDistance;
     private int minDistance;
     private Random random;
-    private int plattformsPerChunk;
+    private int plattformsPerChunk = 4;
     /** How high the chunkgenerator assumes the player can jump when the game starts.*/
     public final static int EXPECTED_STARTING_JUMPHEIGHT = 8;
     /** The shortest distance a plattform must be from a highest place to be considered "reachable" */
@@ -18,17 +18,16 @@ public class ChunkGenerator {
 
     ChunkGenerator(int boardWidth){
         this.boardWidth = boardWidth;
-        this.jumpHeight = EXPECTED_STARTING_JUMPHEIGHT;
+        this.maxDistance = EXPECTED_STARTING_JUMPHEIGHT;
         this.minDistance = MINDISTANCE;
 	this.random = new Random();
-	this.plattformsPerChunk = 1;
     }
 
     /** Given a chunk generate a new chunk such that all plattforms within the new one is
      * MINDISTANCE and EXPECTED_STARTING_JUMPHEIGHT-1 distance away from an upmost position position of the input
      * chunk.
      *
-     * NOTE: This function does guarantee a "solveable" chunk for the player but makes it
+     * NOTE: This function does not guarantee a "solveable" chunk for the player but makes it
      * unlikely that such a chunk would be generated.
      *
      * NOTE: inputChunk's index grows downwards while the generated chunk index grows upwards,
@@ -66,8 +65,7 @@ public class ChunkGenerator {
 	if(reachablePositions.isEmpty()){
 	    System.out.println("No reachable positions");
 	}
-	List<BlockPoint> chosenPositions = chooseFurthestPoints(reachablePositions, plattformsPerChunk);
-
+	List<BlockPoint> chosenPositions = chooseFurthestPoints(reachablePositions);
 
 
 	// Set the randomly chosen blocks to plattform and if possible
@@ -81,7 +79,6 @@ public class ChunkGenerator {
 	    	returnChunk[pos.y][pos.x+1] = BlockType.PLATTFORM;
 	    }
 	}
-
 	return returnChunk;
 
     }
@@ -127,7 +124,7 @@ public class ChunkGenerator {
 	    for(int c = 0; c < boardWidth; c++){
 		for(int r = 0; r < chunk.length; r++){
 		    BlockPoint chunkPoint = new BlockPoint(c,r+heightOffset);
-		    if(pos.distanceTo(chunkPoint) < jumpHeight -1 && pos.distanceTo(chunkPoint) >= minDistance){
+		    if(pos.distanceTo(chunkPoint) < maxDistance - 1 && pos.distanceTo(chunkPoint) >= minDistance){
 		        // Remove the offset so we save the actuall position within the chunk
 		        chunkPoint.y -= heightOffset;
 		        reachablePositions.add(chunkPoint);
@@ -139,7 +136,7 @@ public class ChunkGenerator {
     }
 
     /** Given a list of points this function iterates over these points and chooses
-     * "amount"-amount of points within this list which are far away from each other.
+     * "plattformsPerChunk"-amount of points within this list which are far away from each other.
      *
      * NOTE: This function uses a greedy algorithm and an optimal solution is neither guaranteed nor likely.
      *
@@ -149,13 +146,11 @@ public class ChunkGenerator {
      * @param originalPoints - A list of points from which the function chooses points which are
      *                       far away from each other.
      *
-     * @param amount - How many points far away from each other the function should find.
-     *
      * @return A list of points which are far away from each other.
      */
-    private List<BlockPoint> chooseFurthestPoints(List<BlockPoint> originalPoints, int amount){
-        if(amount <= 0 || amount > originalPoints.size()){
-            throw new IllegalArgumentException("Amount can not be negative or larger than originalPoints");
+    private List<BlockPoint> chooseFurthestPoints(List<BlockPoint> originalPoints){
+        if(plattformsPerChunk <= 0 || plattformsPerChunk > originalPoints.size()){
+            throw new IllegalArgumentException("plattformsPerChunk can not be negative or larger than originalPoints");
 	}
 	List<BlockPoint> startingPoints = new ArrayList<>(originalPoints);
         List<BlockPoint> chosenPoints = new ArrayList<>();
@@ -165,8 +160,8 @@ public class ChunkGenerator {
         // Remove it from the list since we can't add the same point many times
 	startingPoints.remove(randomIndex);
 
-	// Choose "amount"-amount of nodes
-	for(int i = 0; i < amount; i++){
+	// Choose "plattformsPerChunk - 1" amount of plattforms other than the starting point
+	for(int i = 0; i < plattformsPerChunk-1; i++){
 		if(startingPoints.isEmpty()){
 		    break;
 		}
@@ -197,5 +192,18 @@ public class ChunkGenerator {
 	    startingPoints.remove(chosenPoint);
 	}
 	return chosenPoints;
+    }
+
+    public void lowerAmountOfPlattforms(){
+        if(plattformsPerChunk > 1 ){
+            plattformsPerChunk--;
+	}
+    }
+
+    // TODO redo this function when its needed again
+    public void increaseMaxDist(int topBound){
+        if(maxDistance < topBound){
+            maxDistance++;
+	}
     }
 }

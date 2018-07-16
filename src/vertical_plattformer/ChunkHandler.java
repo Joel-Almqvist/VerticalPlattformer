@@ -13,7 +13,7 @@ public class ChunkHandler implements Runnable {
 
     public boolean initCompleted = false;
     private int chunkGenerationInterval;
-    public final static int CHUNK_CAPACITY = 3;
+    public final static int CHUNK_CAPACITY = 2;
 
     public ChunkHandler(BlockType[][] board, int lowestShiftRate){
         this.chunks = new ArrayList<>(CHUNK_CAPACITY+1);
@@ -21,8 +21,8 @@ public class ChunkHandler implements Runnable {
 
         // This interval must be higher than shiftrate * chunkHeight
 	// else the queue of chunks will deplete quicker than its replenished
-	// 4 < chunkHeight -> the queue will never deplete
-        this.chunkGenerationInterval = lowestShiftRate * 4;
+	// 3 < chunkHeight -> the queue will never depletes
+        this.chunkGenerationInterval = lowestShiftRate * 3;
 
         this.chunkGenerator = new ChunkGenerator(boardWidth);
 	this.generationTimer = new Timer(true);
@@ -75,13 +75,14 @@ public class ChunkHandler implements Runnable {
         return nextChunk;
     }
 
-    public void increaseMaxPlattformDistance(){
+    public void increaseMaxPlattformDistance(int amount){
+        chunkGenerator.increaseMaxDist(amount);
 
     }
 
 
-    public void decreasePlattformAmount(int amount){
-
+    public void decreasePlattformAmount(){
+	chunkGenerator.lowerAmountOfPlattforms();
     }
 
 
