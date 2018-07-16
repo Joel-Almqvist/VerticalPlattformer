@@ -8,7 +8,7 @@ import vertical_plattformer.Board;
  *
  */
 public class PlayerActions {
-    private Board board;
+    protected Board board;
 
     public String getPowerupName(){
         return "None";
@@ -33,9 +33,10 @@ public class PlayerActions {
     public boolean playerIsFloating(){
         return board.playerIsFloating();
     }
+
     public void jump(int height){
         if(!board.playerIsFloating() || board.getJumpsSinceLanded() < 1){
-	    board.jump(height);
+	    board.jump(height, true);
 	}
     }
 }

@@ -152,14 +152,20 @@ public class Board {
     }
 
 
-    public void jump(int jumpHeight){
+    /** Move the player continiously upwards untill the jumpHeight is reached.
+     * Stop moving upwards if colliding with a solid block pending on flag collisionOn
+     *
+     * @param jumpHeight How many blocks above the starting height the player jumps.
+     * @param collisionOn A flag deciding whether to stop jumping when reaching a solid block or not.
+     */
+    public void jump(int jumpHeight, boolean collisionOn){
         if(playerPos.y != 0) {
             // Only increment jump counter if we are jumping while floating
             if(playerIsFloating()) {
 		jumpsSinceLanded++;
 	    }
             for(int i = 0; i < jumpHeight; i++) {
-		if (playerPos.y != 0 && !board[playerPos.y - 1][playerPos.x].SOLID) {
+		if (playerPos.y != 0 && (!collisionOn || !board[playerPos.y - 1][playerPos.x].SOLID)) {
 		    board[playerPos.y][playerPos.x] = BlockType.AIR;
 		    playerPos.y -= 1;
 		    board[playerPos.y][playerPos.x] = BlockType.PLAYER;
@@ -241,7 +247,7 @@ public class Board {
 	}
 
 	public BlockType getBlockUnderPlayer(){
-	    if(playerPos.y != height){
+	    if(playerPos.y != height - 1){
 		return board[playerPos.y+1][playerPos.x];
 	    }
 	    return BlockType.AIR;

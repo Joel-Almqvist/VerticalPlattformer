@@ -225,7 +225,7 @@ public class ChunkGenerator {
      */
     private BlockType randomBlock(){
         // Check whether a powerup should be chosen or not
-        if(random.nextInt(9) == 0){
+        if(random.nextInt(4) == 0){
             // Return a random powerup
             return allPowerUps.get(random.nextInt(allPowerUps.size()));
 	}

@@ -13,7 +13,7 @@ public class ChunkHandler implements Runnable {
 
     public boolean initCompleted = false;
     private int chunkGenerationInterval;
-    public final static int CHUNK_CAPACITY = 2;
+    public final static int CHUNK_CAPACITY = 3;
 
     public ChunkHandler(BlockType[][] board, int lowestShiftRate){
         this.chunks = new ArrayList<>(CHUNK_CAPACITY+1);

@@ -2,6 +2,8 @@ package vertical_plattformer;
 
 import vertical_plattformer.player_actions.PlayerActions;
 import vertical_plattformer.player_actions.PlayerHighJump;
+import vertical_plattformer.player_actions.PlayerPowerJump;
+import vertical_plattformer.player_actions.PlayerQuadJump;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -164,6 +166,14 @@ public class Player implements BoardListener{
         switch(board.getBlockUnderPlayer()){
 	    case HIGHJUMP:
 	        playerActions = new PlayerHighJump(board);
+	        break;
+	    case POWERJUMP:
+		playerActions = new PlayerPowerJump(board);
+		break;
+	    case QUADJUMP:
+		playerActions = new PlayerQuadJump(board);
+		break;
+
 	}
 	boardVisual.setPowerupName(playerActions.getPowerupName());
     }
