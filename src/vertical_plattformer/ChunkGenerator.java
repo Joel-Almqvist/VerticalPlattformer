@@ -105,7 +105,7 @@ public class ChunkGenerator {
 	for(int r = 0; r < board.length; r++){
              boolean foundTopRow = false;
              for(int c = 0; c < boardWidth; c++){
-                 if(board[r][c] == BlockType.PLATTFORM){
+                 if(board[r][c].SOLID){
  		    topPlattforms.add(new BlockPoint(c,r));
  		    foundTopRow = true;
  		}

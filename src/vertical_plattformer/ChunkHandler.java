@@ -22,7 +22,7 @@ public class ChunkHandler implements Runnable {
         // This interval must be higher than shiftrate * chunkHeight
 	// else the queue of chunks will deplete quicker than its replenished
 	// 3 < chunkHeight -> the queue will never depletes
-        this.chunkGenerationInterval = lowestShiftRate * 3;
+        this.chunkGenerationInterval = lowestShiftRate;
 
         this.chunkGenerator = new ChunkGenerator(boardWidth);
 	this.generationTimer = new Timer(true);
