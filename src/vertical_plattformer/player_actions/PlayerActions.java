@@ -10,6 +10,10 @@ import vertical_plattformer.Board;
 public class PlayerActions {
     private Board board;
 
+    public String getPowerupName(){
+        return "None";
+    }
+
     public PlayerActions(Board board){
         this.board = board;
     }

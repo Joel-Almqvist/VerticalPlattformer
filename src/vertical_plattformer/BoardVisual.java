@@ -13,11 +13,14 @@ public class BoardVisual extends JComponent implements BoardListener{
     public final static int SCORE_WIDTH = 250;
     /** The padding between the board itself and the text to the right of it*/
     public final static int HIGHSCORE_TEXT_PADDING = 15;
+    public final static int TEXT_ROW_HEIGHT = 20;
 
     /** The coordinate within the JComponent where the score text is shown.
      * Save coordidnate as field rather than recalculating it for every redraw*/
     private final int SCORE_X_COORDINATE;
     private final int SCORE_Y_COORDINATE;
+
+    private String powerUpName = "None";
 
     public BoardVisual(Board board) {
         this.board = board;
@@ -55,9 +58,15 @@ public class BoardVisual extends JComponent implements BoardListener{
                 g2d.fillRect(RECTANGLE_WIDTH*c+c*SPACE_OFFSET,RECTANGLE_HEIGHT*r+r*SPACE_OFFSET,RECTANGLE_WIDTH,RECTANGLE_HEIGHT);
             }
         }
-        g2d.setColor(Color.RED);
         g2d.setFont(new Font("Monospaced", Font.PLAIN, 22));
+        g2d.setColor(Color.RED);
         g2d.drawString("Score: "+String.valueOf(board.getHighscore()),SCORE_X_COORDINATE,SCORE_Y_COORDINATE);
+
+        g2d.setColor(Color.black);
+        g2d.drawString("Current Powerup:",SCORE_X_COORDINATE,SCORE_Y_COORDINATE+TEXT_ROW_HEIGHT);
+
+        g2d.setColor(Color.ORANGE);
+        g2d.drawString(powerUpName,SCORE_X_COORDINATE,SCORE_Y_COORDINATE + 2 * TEXT_ROW_HEIGHT);
 
     }
 
@@ -66,6 +75,10 @@ public class BoardVisual extends JComponent implements BoardListener{
         super.getPreferredSize();
         return new Dimension((RECTANGLE_WIDTH+SPACE_OFFSET)*this.board.getWidth()+SCORE_WIDTH,
                              (RECTANGLE_HEIGHT+SPACE_OFFSET)*this.board.getHeight());
+    }
+
+    public void setPowerupName(String name){
+        this.powerUpName = name;
     }
 }
 

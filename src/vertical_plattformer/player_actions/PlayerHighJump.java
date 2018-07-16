@@ -12,4 +12,9 @@ public class PlayerHighJump extends PlayerActions{
     public void jump(int height){
         super.jump(height * 2);
     }
+
+    @Override
+    public String getPowerupName(){
+        return "High Jump";
+    }
 }

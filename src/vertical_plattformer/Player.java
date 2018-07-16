@@ -164,8 +164,8 @@ public class Player implements BoardListener{
         switch(board.getBlockUnderPlayer()){
 	    case HIGHJUMP:
 	        playerActions = new PlayerHighJump(board);
-	        break;
 	}
+	boardVisual.setPowerupName(playerActions.getPowerupName());
     }
 
 }
