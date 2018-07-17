@@ -12,7 +12,7 @@ import java.util.Random;
  * 	3 - The minimum distance between the boards highest point and the next chunk's plattforms.
  *
  * ChunkGenerator provides an interface for modifying these parameters, it is called from
- * Game -> ChunkHandler -> ChunkGenerator by the increaseDifficulty() function originaly.
+ * Game -> ChunkHandler -> ChunkGenerator by the levelUp() function originaly.
  *
  */
 public class ChunkGenerator {
