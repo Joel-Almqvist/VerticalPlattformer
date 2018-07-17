@@ -128,14 +128,14 @@ public class Player implements BoardListener{
      public void actionPerformed(ActionEvent e){
          gravityTimer.stop();
          gravityTimer.start();
-	 playerActions.jump(jumpHeight);
+	 playerActions.playerCallJump(jumpHeight);
  	}
     };
 
     final private Action fallDown = new AbstractAction() {
         @Override
         public void actionPerformed(ActionEvent e) {
-            if(!playerActions.movePlayerDown()){
+            if(!playerActions.playerCallMoveDown()){
                 alive = false;
                 stop();
 	    }
@@ -147,10 +147,10 @@ public class Player implements BoardListener{
         @Override
         public void actionPerformed(ActionEvent e) {
             if(movingRight){
-                playerActions.movePlayerRight();
+                playerActions.playerCallMoveRight();
 	    }
 	    else{
-		playerActions.movePlayerLeft();
+		playerActions.playerCallMoveLeft();
 	    }
 	}
     };
@@ -169,7 +169,7 @@ public class Player implements BoardListener{
      * for moving him down. If there is no such timer start it.
      */
     public void checkGravity(){
-	if(this.playerActions.playerIsFloating()){
+	if(this.playerActions.playerCallIsFloating()){
 	    if(!gravityTimer.isRunning()){
 		gravityTimer.start();
 	    }

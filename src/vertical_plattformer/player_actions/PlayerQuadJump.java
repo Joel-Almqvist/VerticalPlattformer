@@ -2,6 +2,10 @@ package vertical_plattformer.player_actions;
 
 import vertical_plattformer.Board;
 
+/**
+ *  PlayerQuadJump is a powerup called Quad Jump which allows the player to
+ *  perform four jumps in a row. IE three air jumps are possible.
+ */
 public class PlayerQuadJump extends PlayerActions{
 
     public PlayerQuadJump(Board board){
@@ -9,10 +13,8 @@ public class PlayerQuadJump extends PlayerActions{
     }
 
     @Override
-    public void jump(int height){
-        if(!board.playerIsFloating() || board.getJumpsSinceLanded() < 3){
-	    board.jump(height, true);
-	}
+    public void playerCallJump(int height){
+        jump(height, true, 3);
     }
 
     @Override

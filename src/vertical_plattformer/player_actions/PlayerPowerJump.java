@@ -2,6 +2,11 @@ package vertical_plattformer.player_actions;
 
 import vertical_plattformer.Board;
 
+/**
+ *  PlayerPowerJump is a powerup called Power Jump which makes the player jump without collision
+ *  destroying any BlockPoint he jumps through. Also makes the player jump slightly higher to make it
+ *  more balanced.
+ */
 public class PlayerPowerJump extends PlayerActions{
 
     public PlayerPowerJump(Board board){
@@ -9,10 +14,8 @@ public class PlayerPowerJump extends PlayerActions{
     }
 
     @Override
-    public void jump(int height){
-        if(!board.playerIsFloating() || board.getJumpsSinceLanded() < 1){
-	    board.jump(height + 1, false);
-	}
+    public void playerCallJump(int height){
+        jump(height+1, false, 1);
     }
 
     @Override
