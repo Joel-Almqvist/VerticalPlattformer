@@ -75,10 +75,6 @@ public class ChunkHandler implements Runnable {
         return nextChunk;
     }
 
-    public void increaseMaxPlattformDistance(int amount){
-        chunkGenerator.increaseMaxDist(amount);
-
-    }
 
 
     public void decreasePlattformAmount(){

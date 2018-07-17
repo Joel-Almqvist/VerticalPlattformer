@@ -4,27 +4,51 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+/** ChunkGenerator is responsible for creating "chunks" which are small extensions of the board to be
+ * appended at the top of the board whenever a shift occurs. ChunkGenerator may create more difficult
+ * or more easy chunks by changing:
+ * 	1 - How many plattforms is within said chunk
+ * 	2 - The height of a chunk
+ * 	3 - The minimum distance between the boards highest point and the next chunk's plattforms.
+ *
+ * ChunkGenerator provides an interface for modifying these parameters, it is called from
+ * Game -> ChunkHandler -> ChunkGenerator by the increaseDifficulty() function originaly.
+ *
+ */
 public class ChunkGenerator {
     private int boardWidth;
-    private int maxDistance;
-    private int minDistance;
     private Random random;
-    private int plattformsPerChunk = 4;
-    /** How high the chunkgenerator assumes the player can jump when the game starts.*/
-    public final static int EXPECTED_STARTING_JUMPHEIGHT = 8;
-    /** The shortest distance a plattform must be from a highest place to be considered "reachable" */
-    public final static int MINDISTANCE = 3;
+    /** Infinity is used in one of the functions */
     public final static int INFINITY = Integer.MAX_VALUE;
+
+    /** These 4 fields/constants may be modified to generate more difficult chunks as long as the
+     * following restrictions are upheld:
+     *
+     *	1: minDistance < MAX_DISTANCE or the pattern of plattforms generated
+     *   	may be trivial and non random.
+     *
+     *  2: chunkHeight < MAX_DISTANCE or getReachablePositions() will provide the empty list
+     *  	due to finding no reachable positions.
+     *
+     *  3: MAX_DISTANCE < playerJumpHeight, else unsolveable chunks may be created.
+     *
+     *  NOTE: A high amount of plattforms may create an unsolveable chunk due to blocking the player.
+     *
+     */
+    public final static int MAX_DISTANCE = 9;
+    private double minDistance = 4;
+    private int chunkHeight = 6;
+    private int plattformsPerChunk = 3;
+
 
     /** A list containing one object of every powerup BlockType */
     private List<BlockType> allPowerUps;
 
     ChunkGenerator(int boardWidth){
         this.boardWidth = boardWidth;
-        this.maxDistance = EXPECTED_STARTING_JUMPHEIGHT - 2;
-        this.minDistance = MINDISTANCE;
 	this.random = new Random();
 	this.allPowerUps = new ArrayList<>();
+
 
 	for(BlockType block : BlockType.values()){
 	    if(block.POWERUP){
@@ -33,15 +57,26 @@ public class ChunkGenerator {
 	}
     }
 
-    /** Given a chunk generate a new chunk such that all plattforms within the new one is
-     * MINDISTANCE and EXPECTED_STARTING_JUMPHEIGHT-1 distance away from an upmost position position of the input
-     * chunk.
+    /** Given an input chunk generate a new chunk to be appended on top of the original one.
      *
-     * NOTE: This function does not guarantee a "solveable" chunk for the player but makes it
-     * unlikely that such a chunk would be generated.
+     * A new chunk is generated in the following steps:
      *
-     * NOTE: inputChunk's index grows downwards while the generated chunk index grows upwards,
-     * see the drawing below for clarification. The generatedChunks row 0 is put atop of inputChunk row 0.
+     *  1 - Find the highest plattforms in the input chunk
+     *
+     *  2 - Find all points in the newly created chunk reachable from the points found in step (1)
+     *
+     *  3 - Choose one point from step (2) randomly, and (amountOfPlattforms - 1) amount of points
+     *  as far away from the randomly chosen point as possible (while still being reachable).
+     *
+     *	4 - Make the points given by step (3) into powerup-plattforms with 10% probability and make the
+     *	points to their immediate left/right into the same BlockType as them.
+     *
+     * For more details of step (1) - (3) see their corresponding function.
+     *
+     * NOTE: The inputChunk is expected to grow downwards (the same way board, or most matrixes do)
+     * whereas the newly generated chunk will grow upwards.
+     *
+     * Example:
      *
      *GeneratedChunk:
      * Row 2*******
@@ -54,26 +89,26 @@ public class ChunkGenerator {
      * Row 2*******
      *
      * @param inputChunk The original state of the game upon which the generated chunk
-     *                   is going to be appended to.
+     *                   is going to be appended to. This parameter can be the entire board.
      *
-     * @return A new chunk to append to the inputChunk.
+     * @return A new chunk to be append on top of the inputChunk.
      */
     public BlockType[][] generateChunk(BlockType[][] inputChunk){
-        // A chunk must never be higher than the player can jump
-        BlockType[][] returnChunk = new BlockType[EXPECTED_STARTING_JUMPHEIGHT-1][boardWidth];
-        // Fill the new chunk with air
+        BlockType[][] returnChunk = new BlockType[chunkHeight][boardWidth];
+        // Fill the new chunk with air initially
         for(int c = 0; c < boardWidth; c++){
             for(int r = 0; r < returnChunk.length; r++){
 		returnChunk[r][c] = BlockType.AIR;
 	    }
 	}
-	// Find all plattforms on the highest row with a plattform
-	// Find all positions reachable from these upmost plattforms
-	// Make a suitable selections of the reachable positions to avoid plattforms bunching up
+
+
 	List<BlockPoint> upmostPlattforms = getTopPlattforms(inputChunk);
 	List<BlockPoint> reachablePositions = getReachablePositions(returnChunk, upmostPlattforms);
 	if(reachablePositions.isEmpty()){
-	    System.out.println("No reachable positions");
+	    // This should only occur if too harsh or contradictory restrictions
+	    // have been placed on the chunk to be generated.
+	    throw new IllegalArgumentException("No reachable positions can be found");
 	}
 	List<BlockPoint> chosenPositions = chooseFurthestPoints(reachablePositions);
 
@@ -83,6 +118,8 @@ public class ChunkGenerator {
 	for(BlockPoint pos : chosenPositions){
 	    BlockType randomBlock = randomBlock();
 	    returnChunk[pos.y][pos.x] = randomBlock;
+
+	    // Extend the point to a plattform of length 3 if possible
 	    if(pos.x > 0){
 		returnChunk[pos.y][pos.x-1] = randomBlock;
 	    }
@@ -94,18 +131,25 @@ public class ChunkGenerator {
 
     }
 
-    /**
-     * Returns all positions of all plattforms existing on the highest row
-     * on board with atleast one plattform.
+
+    /** Returns the positions of all the most upmost plattforms on the input
+     * chunk.
+     *
+     * NOTE: The positions are given in the input chunk's coordinate-system
+     * and all of them are neccessarily on the same row.
+     *
+     * @param chunk The chunk which the upmost plattform's are to be extracted from.
+     *
+     * @return A list of BlockPoint(s) of the highest solid BlockType(s) in chunk.
      */
-    private List<BlockPoint> getTopPlattforms(BlockType[][] board){
+    private List<BlockPoint> getTopPlattforms(BlockType[][] chunk){
 	// Find the upmost row with atleast one plattform in it
 	// and save the position of all plattforms in said row.
 	List<BlockPoint> topPlattforms = new ArrayList<>(boardWidth);
-	for(int r = 0; r < board.length; r++){
+	for(int r = 0; r < chunk.length; r++){
              boolean foundTopRow = false;
              for(int c = 0; c < boardWidth; c++){
-                 if(board[r][c].SOLID){
+                 if(chunk[r][c].SOLID){
  		    topPlattforms.add(new BlockPoint(c,r));
  		    foundTopRow = true;
  		}
@@ -119,26 +163,27 @@ public class ChunkGenerator {
     /** Finds all reachable positions within the given chunk which are atleast minDistance
      *  away from an upmost position.
      *
-     * @param chunk The chunk to which the positions relate to
+     * @param chunk The chunk to which the reachable positions relate to, it is different from the
+     *              chunk the topPlattforms exists within.
+     *
      * @param topPlattforms A list with positions of all the currently upmost plattforms within
      *                      the main board. (They are neccesarily on the same row)
      *
-     * @return A list of all the positions within chunk which the player can reach and which are
-     * atleast of distance minDistance.
+     * @return A list of all the positions within "chunk" which are atleast minDistance away from an
+     * 		upmost position given by "topPlattforms".
      */
     private List<BlockPoint> getReachablePositions(BlockType[][] chunk, List<BlockPoint> topPlattforms){
 	List<BlockPoint> reachablePositions = new ArrayList<>();
-	// The distance between the highest plattform within the main board
-	// and the start of the chunk.
-	int heightOffset = topPlattforms.get(0).y+1;
+	// For every upmost position find all reachable positions
 	for(BlockPoint pos : topPlattforms){
+	    // Transpose the highest position point into chunks coordinate system by placing
+	    // directly below the start of chunk.
+	    BlockPoint highPos = new BlockPoint(pos.x, -pos.y - 1);
 	    for(int c = 0; c < boardWidth; c++){
 		for(int r = 0; r < chunk.length; r++){
-		    BlockPoint chunkPoint = new BlockPoint(c,r+heightOffset);
-		    if(pos.distanceTo(chunkPoint) < maxDistance && pos.distanceTo(chunkPoint) >= minDistance){
-		        // Remove the offset so we save the actuall position within the chunk
-		        chunkPoint.y -= heightOffset;
-		        reachablePositions.add(chunkPoint);
+		    BlockPoint pointInChunk = new BlockPoint(c,r);
+		    if(pointInChunk.distanceTo(highPos) <= MAX_DISTANCE && pointInChunk.distanceTo(highPos) >= minDistance){
+		        reachablePositions.add(pointInChunk);
 		    }
 		}
 	    }
@@ -146,18 +191,15 @@ public class ChunkGenerator {
 	return reachablePositions;
     }
 
-    /** Given a list of points this function iterates over these points and chooses
-     * "plattformsPerChunk"-amount of points within this list which are far away from each other.
+    /** Given a list of BlockPoint this functionen chooses one point randomly and (plattformsPerChunk - 1) amount
+     * of points as far away from the randomly chosen point as possible.
      *
-     * NOTE: This function uses a greedy algorithm and an optimal solution is neither guaranteed nor likely.
+     * NOTE: The more plattforms being chosen by this function the worse their spread within the chunk will be.
      *
-     * The first point is chosen randomly and given that point the furthest point is chosen greedily
-     * "amount"-amount of times.
+     * @param originalPoints - A list of points from which the function may choose points from.
      *
-     * @param originalPoints - A list of points from which the function chooses points which are
-     *                       far away from each other.
-     *
-     * @return A list of points which are far away from each other.
+     * @return A list containing points from originalPoints of length "plattFormsPerChunk" with all elements
+     * 		hopefully being far away from eachother.
      */
     private List<BlockPoint> chooseFurthestPoints(List<BlockPoint> originalPoints){
         if(plattformsPerChunk <= 0 || plattformsPerChunk > originalPoints.size()){
@@ -205,18 +247,6 @@ public class ChunkGenerator {
 	return chosenPoints;
     }
 
-    public void lowerAmountOfPlattforms(){
-        if(plattformsPerChunk > 1 ){
-            plattformsPerChunk--;
-	}
-    }
-
-    // TODO redo this function when its needed again
-    public void increaseMaxDist(int topBound){
-        if(maxDistance < topBound){
-            maxDistance++;
-	}
-    }
 
     /** Returns a random powerup BlockType 10% of time and
      * the PLATTFORM blocktype in the other cases.
@@ -225,10 +255,36 @@ public class ChunkGenerator {
      */
     private BlockType randomBlock(){
         // Check whether a powerup should be chosen or not
-        if(random.nextInt(4) == 0){
+        if(random.nextInt(9) == 0){
             // Return a random powerup
             return allPowerUps.get(random.nextInt(allPowerUps.size()));
 	}
 	return BlockType.PLATTFORM;
     }
+
+
+    /** The three functions below together form the public interface for
+     * other classes to notify the ChunkGenerator to create more difficult chunks.
+     *
+     * The restrictions of the fields are discussed more in their declaration.
+     */
+
+    public void lowerAmountOfPlattforms(){
+        if(plattformsPerChunk > 1 ){
+            plattformsPerChunk--;
+	}
+    }
+
+    public void increaseMinDistance(){
+        if(minDistance + 1 < MAX_DISTANCE){
+            minDistance++;
+	}
+    }
+
+    public void increaseChunkHeight(){
+        if(chunkHeight < MAX_DISTANCE -1){
+            chunkHeight++;
+	}
+    }
+
 }
