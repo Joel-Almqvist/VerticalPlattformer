@@ -270,7 +270,7 @@ public class ChunkGenerator {
      */
 
     public void lowerAmountOfPlattforms(){
-        if(plattformsPerChunk > 1 ){
+        if(plattformsPerChunk > 2 ){
             plattformsPerChunk--;
 	}
     }

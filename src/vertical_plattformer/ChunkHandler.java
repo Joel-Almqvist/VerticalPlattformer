@@ -76,8 +76,15 @@ public class ChunkHandler implements Runnable {
     }
 
 
+    public void generateLargerChunks(){
+        chunkGenerator.increaseChunkHeight();
+    }
 
-    public void decreasePlattformAmount(){
+    public void generateWithHigherMinDist(){
+        chunkGenerator.increaseMinDistance();
+    }
+
+    public void generateFewerPlattforms(){
 	chunkGenerator.lowerAmountOfPlattforms();
     }
 
