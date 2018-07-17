@@ -233,8 +233,8 @@ public class Board {
     	return true;
         }
 
-        public BlockType[][] getBoard(){
-        	return this.board;
+	public BlockType getBlockAt(int row, int col){
+            return board[row][col];
 	}
 
 	public int getHighscore(){

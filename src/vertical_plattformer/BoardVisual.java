@@ -14,11 +14,13 @@ public class BoardVisual extends JComponent implements BoardListener{
     /** The padding between the board itself and the text to the right of it*/
     public final static int HIGHSCORE_TEXT_PADDING = 15;
     public final static int TEXT_ROW_HEIGHT = 20;
+    public final static int FONT_SIZE = 22;
 
     /** The coordinate within the JComponent where the score text is shown.
      * Save coordidnate as field rather than recalculating it for every redraw*/
     private final int SCORE_X_COORDINATE;
     private final int SCORE_Y_COORDINATE;
+
 
     private String powerUpName = "None";
 
@@ -36,11 +38,10 @@ public class BoardVisual extends JComponent implements BoardListener{
     protected void paintComponent(Graphics g){
         super.paintComponent(g);
         final Graphics2D g2d = (Graphics2D) g;
-        BlockType[][] currentBoard = this.board.getBoard();
         this.board.getHighscore();
         for(int r = 0; r < board.getHeight(); r++){
             for(int c = 0; c < board.getWidth(); c++){
-                BlockType type = currentBoard[r][c];
+                BlockType type = board.getBlockAt(r,c);
                 switch (type) {
                     case PLAYER:
                         g2d.setColor(Color.RED);
@@ -52,13 +53,13 @@ public class BoardVisual extends JComponent implements BoardListener{
                         g2d.setColor(Color.WHITE);
                         break;
                     default:
-                        g2d.setColor(Color.YELLOW);
+                        g2d.setColor(Color.ORANGE);
                         break;
                 }
                 g2d.fillRect(RECTANGLE_WIDTH*c+c*SPACE_OFFSET,RECTANGLE_HEIGHT*r+r*SPACE_OFFSET,RECTANGLE_WIDTH,RECTANGLE_HEIGHT);
             }
         }
-        g2d.setFont(new Font("Monospaced", Font.PLAIN, 22));
+        g2d.setFont(new Font("Monospaced", Font.PLAIN, FONT_SIZE));
         g2d.setColor(Color.RED);
         g2d.drawString("Score: "+String.valueOf(board.getHighscore()),SCORE_X_COORDINATE,SCORE_Y_COORDINATE);
 
@@ -67,7 +68,6 @@ public class BoardVisual extends JComponent implements BoardListener{
 
         g2d.setColor(Color.ORANGE);
         g2d.drawString(powerUpName,SCORE_X_COORDINATE,SCORE_Y_COORDINATE + 2 * TEXT_ROW_HEIGHT);
-
     }
 
     @Override
