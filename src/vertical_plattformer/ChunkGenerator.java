@@ -21,7 +21,7 @@ public class ChunkGenerator {
 
     ChunkGenerator(int boardWidth){
         this.boardWidth = boardWidth;
-        this.maxDistance = EXPECTED_STARTING_JUMPHEIGHT;
+        this.maxDistance = EXPECTED_STARTING_JUMPHEIGHT - 2;
         this.minDistance = MINDISTANCE;
 	this.random = new Random();
 	this.allPowerUps = new ArrayList<>();
@@ -135,7 +135,7 @@ public class ChunkGenerator {
 	    for(int c = 0; c < boardWidth; c++){
 		for(int r = 0; r < chunk.length; r++){
 		    BlockPoint chunkPoint = new BlockPoint(c,r+heightOffset);
-		    if(pos.distanceTo(chunkPoint) < maxDistance - 1 && pos.distanceTo(chunkPoint) >= minDistance){
+		    if(pos.distanceTo(chunkPoint) < maxDistance && pos.distanceTo(chunkPoint) >= minDistance){
 		        // Remove the offset so we save the actuall position within the chunk
 		        chunkPoint.y -= heightOffset;
 		        reachablePositions.add(chunkPoint);

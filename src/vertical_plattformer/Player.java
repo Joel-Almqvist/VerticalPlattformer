@@ -5,8 +5,11 @@ import vertical_plattformer.player_actions.PlayerHighJump;
 import vertical_plattformer.player_actions.PlayerPowerJump;
 import vertical_plattformer.player_actions.PlayerQuadJump;
 
+
 import javax.swing.*;
 import java.awt.event.ActionEvent;
+import java.util.TimerTask;
+
 
 /** The vertical_plattformer.Player class maps player action to their corresponding keybinding to vertical_plattformer.BoardVisual
  *  and communicates to vertical_plattformer.Board how to change the board state through player action.
@@ -14,12 +17,17 @@ import java.awt.event.ActionEvent;
  *
  */
 public class Player implements BoardListener{
-    private static final int FALLTIME = 120;
-    private static final int MOVEMENTSPEED = 75;
+    public static final int FALLTIME = 120;
+    public static final int MOVEMENTSPEED = 75;
+    /** How long a powerup should last in ms*/
+    public static final int POWERUP_DURATION = 2500;
+
     private Board board;
     private BoardVisual boardVisual;
-    private Timer gravityTimer;
-    private Timer movementTimer;
+    private javax.swing.Timer gravityTimer;
+    private javax.swing.Timer movementTimer;
+    private java.util.Timer powerupTimer;
+    private TimerTask powerupCountdown;
     private boolean movingRight;
     private boolean alive = true;
     private int jumpHeight;
@@ -30,12 +38,22 @@ public class Player implements BoardListener{
 	this.boardVisual = boardVisual;
 	this.playerActions = new PlayerActions(board);
 
-	this.gravityTimer = new Timer(FALLTIME, fallDown);
+	this.gravityTimer = new javax.swing.Timer(FALLTIME, fallDown);
 	this.gravityTimer.setRepeats(false);
 
-	this.movementTimer = new Timer(MOVEMENTSPEED, autoMovePlayer);
+	this.movementTimer = new javax.swing.Timer(MOVEMENTSPEED, autoMovePlayer);
 	this.movingRight = true;
 	this.jumpHeight = 5;
+
+	this.powerupTimer = new java.util.Timer();
+	this.powerupCountdown = new TimerTask()
+	{
+	    @Override public void run() {
+
+	    }
+	};
+
+
 	setUpKeyBinds();
     }
 
@@ -161,8 +179,13 @@ public class Player implements BoardListener{
 	}
     }
 
-
+    /** This function is called continuously whenever board changes, it checks
+     * whether the player should be powered-up. If so, power-up the player and
+     * cancel the current powerup countdown and create a new one countdown.
+     */
     public void setPlayerPowerup(){
+        boolean powerupChanged = true;
+        // Power-up the player
         switch(board.getBlockUnderPlayer()){
 	    case HIGHJUMP:
 	        playerActions = new PlayerHighJump(board);
@@ -173,9 +196,23 @@ public class Player implements BoardListener{
 	    case QUADJUMP:
 		playerActions = new PlayerQuadJump(board);
 		break;
-
+	    default:
+	        powerupChanged = false;
+	        break;
 	}
-	boardVisual.setPowerupName(playerActions.getPowerupName());
+	if(powerupChanged) {
+	    // Notify boardVisual and create a new countdown
+	    boardVisual.setPowerupName(playerActions.getPowerupName());
+	    powerupCountdown.cancel();
+	    powerupCountdown = new TimerTask()
+	    {
+		@Override public void run() {
+		    playerActions = new PlayerActions(board);
+		    boardVisual.setPowerupName(playerActions.getPowerupName());
+		}
+	    };
+	    powerupTimer.schedule(powerupCountdown, POWERUP_DURATION);
+	}
     }
 
 }
