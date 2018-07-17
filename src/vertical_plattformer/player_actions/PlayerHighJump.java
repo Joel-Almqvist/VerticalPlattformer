@@ -10,7 +10,7 @@ public class PlayerHighJump extends PlayerActions{
 
     @Override
     public void jump(int height){
-        super.jump(height * 2);
+        super.jump(height + 4);
     }
 
     @Override

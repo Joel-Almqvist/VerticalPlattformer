@@ -11,7 +11,7 @@ public class PlayerPowerJump extends PlayerActions{
     @Override
     public void jump(int height){
         if(!board.playerIsFloating() || board.getJumpsSinceLanded() < 1){
-	    board.jump(height, false);
+	    board.jump(height + 1, false);
 	}
     }
 
