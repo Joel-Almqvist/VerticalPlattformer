@@ -21,7 +21,7 @@ public class Player implements BoardListener{
     public static final int FALLTIME = 120;
     public static final int MOVEMENTSPEED = 75;
     /** How long a powerup should last in ms*/
-    public static final int POWERUP_DURATION = 2500;
+    public static final int POWERUP_DURATION = 5000;
 
     private Board board;
     private BoardVisual boardVisual;
