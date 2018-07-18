@@ -34,6 +34,7 @@ public class Player implements BoardListener{
         this.board = board;
 	this.boardVisual = boardVisual;
 	this.playerActions = new PlayerDefault(board);
+	boardVisual.setPowerupName(playerActions.getPowerupName());
 
 	this.gravityTimer = new javax.swing.Timer(Config.FALLTIME, fallDown);
 	this.gravityTimer.setRepeats(false);

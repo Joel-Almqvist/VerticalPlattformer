@@ -19,16 +19,17 @@ import static vertical_plattformer.Config.*;
 public class Game{
 
     private Board board;
+    private BoardVisual boardVisual;
     private Player player;
     private Timer gameTimer;
     private int shiftInterval;
     private int currentLevel = 1;
 
 
-    Game(Board board, Player player){
-
+    Game(Board board, Player player, BoardVisual boardVisual){
         this.board = board;
         this.player = player;
+        this.boardVisual = boardVisual;
         this.shiftInterval = STARTING_SHIFT_INTERVAL;
         this.gameTimer = new Timer(true);
     }
@@ -42,10 +43,9 @@ public class Game{
         board.addBoardListener(boardVisual);
         board.addBoardListener(player);
 
-        Game game = new Game(board, player);
+        Game game = new Game(board, player, boardVisual);
         game.queueNextShift();
 
-        // TODO 2: Visa vilken level man är på
         // TODO 3: Mer kommentarer
     }
 
@@ -90,6 +90,7 @@ public class Game{
      */
     public void levelUp(){
         currentLevel++;
+        boardVisual.currentLevel = currentLevel;
         System.out.println("Level up, now at "+currentLevel);
         if(shiftInterval - SHIFT_REDUCTION_PER_LEVEL >= LOWEST_SHIFT_INTERVAL) {
             shiftInterval -= SHIFT_REDUCTION_PER_LEVEL;

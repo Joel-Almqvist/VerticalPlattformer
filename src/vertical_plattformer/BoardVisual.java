@@ -8,16 +8,17 @@ import static vertical_plattformer.Config.*;
 /** vertical_plattformer.BoardVisual draws the current state of vertical_plattformer.Board within vertical_plattformer.BoardFrame.
  */
 public class BoardVisual extends JComponent implements BoardListener{
-    public Board board;
-
-
+    private Board board;
     /** The coordinate within the JComponent where the score text is shown.
-     * Save coordidnate as field rather than recalculating it for every redraw*/
+     * Save coordidnates as fields rather than recalculating it for every redraw*/
     private final int SCORE_X_COORDINATE;
     private final int SCORE_Y_COORDINATE;
 
+    private String powerUpName = "";
 
-    private String powerUpName = "None";
+    /** BoardVisual is not responsible for keeping track of which level player is in
+     * and forfeits all controll of it to Game, which is why currentLevel is public.*/
+    public int currentLevel = 1;
 
     public BoardVisual(Board board) {
         this.board = board;
@@ -59,10 +60,13 @@ public class BoardVisual extends JComponent implements BoardListener{
         g2d.drawString("Score: "+String.valueOf(board.getHighscore()),SCORE_X_COORDINATE,SCORE_Y_COORDINATE);
 
         g2d.setColor(Color.black);
-        g2d.drawString("Current Powerup:",SCORE_X_COORDINATE,SCORE_Y_COORDINATE+TEXT_ROW_HEIGHT);
+        g2d.drawString("Current Powerup:",SCORE_X_COORDINATE,SCORE_Y_COORDINATE + TEXT_ROW_HEIGHT);
 
         g2d.setColor(Color.ORANGE);
         g2d.drawString(powerUpName,SCORE_X_COORDINATE,SCORE_Y_COORDINATE + 2 * TEXT_ROW_HEIGHT);
+
+        g2d.setColor(Color.blue);
+        g2d.drawString("Level: "+currentLevel,SCORE_X_COORDINATE,SCORE_Y_COORDINATE + 3 * TEXT_ROW_HEIGHT);
     }
 
     @Override
@@ -75,5 +79,6 @@ public class BoardVisual extends JComponent implements BoardListener{
     public void setPowerupName(String name){
         this.powerUpName = name;
     }
+
 }
 
