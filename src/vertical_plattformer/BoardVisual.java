@@ -5,7 +5,13 @@ import java.awt.*;
 
 import static vertical_plattformer.Config.*;
 
-/** vertical_plattformer.BoardVisual draws the current state of vertical_plattformer.Board within vertical_plattformer.BoardFrame.
+/**
+ * BoardVisual is responsible for visualising the current gamestate by creating an image and attaching it to BoardFrame.
+ *
+ * BoardVisual listens to Board, polls Board for more information, and is pushed information from Player and Game.
+ * 1 - It polls Board for the current state of the board when Board indicate that change has occured.
+ * 2 - Player pushes the name of the current powerup
+ * 3 - Game pushes which level the player is on currently.
  */
 public class BoardVisual extends JComponent implements BoardListener{
     private Board board;

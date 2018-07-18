@@ -5,8 +5,18 @@ import java.util.List;
 
 import static vertical_plattformer.Config.STARTING_ROWS;
 
-/** vertical_plattformer.Board is responsible for storing data related to board and manipulating it
- *  however is seen fit.
+/**
+ * Board is responsible for storing and manipulating the game-board and because of this many classes
+ * has a reference to Board as they need to know the current boardstate. Board offers a wide variety of public methods
+ * for other classes to read and manipulate the boardstate.
+ *
+ * PlayerActions, Player, Game and BoardVisual polls Board for information of the current boardstate.
+ *
+ * Board pushes information to Highscore whenever the player moves upwards (this information is read by Game).
+ *
+ * Board notifies all BoardListeners (currently Player and BoardVisual) whenever the board is changed.
+ *
+ * Board creates its own ChunkHandler which it continously polls for new chunks.
  */
 public class Board {
     private int width;
@@ -19,7 +29,6 @@ public class Board {
     private List<BoardListener> boardListeners;
     private HighscoreHandler highscoreHandler;
     private int jumpsSinceLanded = 0;
-    /** The amount of rows the player stands on upon game start */
 
     public int getHeight(){
         return this.height;
@@ -71,13 +80,13 @@ public class Board {
 		// r == c   is comparable to y = x
 		// r == 2c  is comparable to y = 2x
 		// r == (width - c) is comparable to y = -x
-		else if (r < height - STARTING_ROWS - 2 && (r == (2 * width - 2 * c) || r == (2 * width - 2 * c - 1))) {
+		else if (r < height - STARTING_ROWS - 2 && (r == 2*(width - c) || r == 2*(width - c) - 1)) {
 		    this.board[r][c] = BlockType.PLATTFORM;
 		}
 
 
-		// Create a ceiling near the top of the initialized board, this allows
-		// for more random variation of the chunks
+		// Create a ceiling of plattforms near the top of the initialized board,
+		// this allows for more random positions to be created in the upcoming chunk.
 		else if (r == 1 && c < width - 5) {
 		    this.board[r][c] = BlockType.PLATTFORM;
 		} else {
