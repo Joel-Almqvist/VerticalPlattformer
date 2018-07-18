@@ -3,6 +3,8 @@ package vertical_plattformer;
 import java.util.ArrayList;
 import java.util.List;
 
+import static vertical_plattformer.Config.STARTING_ROWS;
+
 /** vertical_plattformer.Board is responsible for storing data related to board and manipulating it
  *  however is seen fit.
  */
@@ -18,7 +20,6 @@ public class Board {
     private HighscoreHandler highscoreHandler;
     private int jumpsSinceLanded = 0;
     /** The amount of rows the player stands on upon game start */
-    public static final int STARTING_ROWS = 8;
 
     public int getHeight(){
         return this.height;

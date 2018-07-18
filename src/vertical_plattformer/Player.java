@@ -11,6 +11,8 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.util.TimerTask;
 
+import static vertical_plattformer.Config.JUMP_HEIGHT;
+
 
 /** The vertical_plattformer.Player class maps player action to their corresponding keybinding to vertical_plattformer.BoardVisual
  *  and communicates to vertical_plattformer.Board how to change the board state through player action.
@@ -18,11 +20,6 @@ import java.util.TimerTask;
  *
  */
 public class Player implements BoardListener{
-    public static final int FALLTIME = 120;
-    public static final int MOVEMENTSPEED = 75;
-    /** How long a powerup should last in ms*/
-    public static final int POWERUP_DURATION = 5000;
-
     private Board board;
     private BoardVisual boardVisual;
     private javax.swing.Timer gravityTimer;
@@ -31,7 +28,6 @@ public class Player implements BoardListener{
     private TimerTask powerupCountdown;
     private boolean movingRight;
     private boolean alive = true;
-    private int jumpHeight;
     private PlayerActions playerActions;
 
     public Player(BoardVisual boardVisual, Board board) {
@@ -39,12 +35,11 @@ public class Player implements BoardListener{
 	this.boardVisual = boardVisual;
 	this.playerActions = new PlayerDefault(board);
 
-	this.gravityTimer = new javax.swing.Timer(FALLTIME, fallDown);
+	this.gravityTimer = new javax.swing.Timer(Config.FALLTIME, fallDown);
 	this.gravityTimer.setRepeats(false);
 
-	this.movementTimer = new javax.swing.Timer(MOVEMENTSPEED, autoMovePlayer);
+	this.movementTimer = new javax.swing.Timer(Config.MOVEMENTSPEED, autoMovePlayer);
 	this.movingRight = true;
-	this.jumpHeight = 5;
 
 	this.powerupTimer = new java.util.Timer();
 	this.powerupCountdown = new TimerTask()
@@ -129,7 +124,7 @@ public class Player implements BoardListener{
      public void actionPerformed(ActionEvent e){
          gravityTimer.stop();
          gravityTimer.start();
-	 playerActions.playerCallJump(jumpHeight);
+	 playerActions.playerCallJump(JUMP_HEIGHT);
  	}
     };
 
@@ -212,7 +207,7 @@ public class Player implements BoardListener{
 		    boardVisual.setPowerupName(playerActions.getPowerupName());
 		}
 	    };
-	    powerupTimer.schedule(powerupCountdown, POWERUP_DURATION);
+	    powerupTimer.schedule(powerupCountdown, Config.POWERUP_DURATION);
 	}
     }
 

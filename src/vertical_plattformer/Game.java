@@ -3,6 +3,8 @@ package vertical_plattformer;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import static vertical_plattformer.Config.*;
+
 /**
  *  The purpose of the class is to create games and store metadata for them such as difficulty or
  *  information from a previous run. Currently this is not implemented and the class is quite bare-bone
@@ -15,26 +17,6 @@ import java.util.TimerTask;
  *  Game has many constants determining how the difficulty of the game escalates.
  */
 public class Game{
-    /** The delay in ms between each shift down at the start. */
-    public final static int STARTING_SHIFT_INTERVAL = 600;
-    /** The lowest value the shift delay is able to assume */
-    public final static int LOWEST_SHIFT_INTERVAL = 200;
-    /** How many points (IE rows the player reaches) to reach a new level */
-    public final static int POINTS_TO_REACH_NEXT_LEVEL = 30;
-    /** How many ms faster the next shift will be after a level up*/
-    public final static int SHIFT_REDUCTION_PER_LEVEL = 100;
-
-    /** How many times the player must level up before chunkGenerator
-     *  generates fewer plattforms per chunk*/
-    public final static int LEVELS_TO_FEWER_PLATTFORMS = 6;
-
-    /** How many times the player must level up before chunkGenerator
-     *  generates larger chunks*/
-    public final static int LEVELS_TO_LARGER_CHUNKS = 4;
-
-    /** How many times the player must level up before chunkGenerator
-     *  generates chunks with higher min distance between chunks*/
-    public final static int LEVELS_TO_LARGER_MIN_DIST = 4;
 
     private Board board;
     private Player player;
@@ -44,6 +26,7 @@ public class Game{
 
 
     Game(Board board, Player player){
+
         this.board = board;
         this.player = player;
         this.shiftInterval = STARTING_SHIFT_INTERVAL;
@@ -51,7 +34,7 @@ public class Game{
     }
 
     public static void main(String[] args) {
-        Board board = new Board(20, 45, LOWEST_SHIFT_INTERVAL);
+        Board board = new Board(BOARD_WIDTH, BOARD_HEIGHT, LOWEST_SHIFT_INTERVAL);
         BoardVisual boardVisual = new BoardVisual(board);
         BoardFrame frame = new BoardFrame("Platformer", boardVisual);
         Player player = new Player(boardVisual, board);
@@ -61,6 +44,10 @@ public class Game{
 
         Game game = new Game(board, player);
         game.queueNextShift();
+
+        // TODO 1: Configfil
+        // TODO 2: Visa vilken level man är på
+        // TODO 3: Mer kommentarer
     }
 
     /** Shifts the board once, checks if the player has reached a new level

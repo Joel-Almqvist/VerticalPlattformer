@@ -3,18 +3,13 @@ package vertical_plattformer;
 import javax.swing.*;
 import java.awt.*;
 
+import static vertical_plattformer.Config.*;
+
 /** vertical_plattformer.BoardVisual draws the current state of vertical_plattformer.Board within vertical_plattformer.BoardFrame.
  */
 public class BoardVisual extends JComponent implements BoardListener{
     public Board board;
-    public final static int RECTANGLE_HEIGHT = 20;
-    public final static int RECTANGLE_WIDTH = 20;
-    public final static int SPACE_OFFSET = 2;
-    public final static int SCORE_WIDTH = 250;
-    /** The padding between the board itself and the text to the right of it*/
-    public final static int HIGHSCORE_TEXT_PADDING = 15;
-    public final static int TEXT_ROW_HEIGHT = 20;
-    public final static int FONT_SIZE = 22;
+
 
     /** The coordinate within the JComponent where the score text is shown.
      * Save coordidnate as field rather than recalculating it for every redraw*/
