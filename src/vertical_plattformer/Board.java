@@ -80,6 +80,11 @@ public class Board {
 		// r == c   is comparable to y = x
 		// r == 2c  is comparable to y = 2x
 		// r == (width - c) is comparable to y = -x
+
+		// Ignore comment about identical branches because:
+		// 1 - Order matters, spawning the player has higher priority than creating this nice looking pattern
+		// 2 - The if statements do different things (creating the bottom rows to stand on versus a "stair" upwards)
+		// and collapsing them will create an unneccesarily complex if statement with two purposes
 		else if (r < height - STARTING_ROWS - 2 && (r == 2*(width - c) || r == 2*(width - c) - 1)) {
 		    this.board[r][c] = BlockType.PLATTFORM;
 		}
@@ -101,17 +106,17 @@ public class Board {
         if(playerPos.y == height-1){
             return true;
 	}
-	return !board[playerPos.y+1][playerPos.x].SOLID;
+	return !board[playerPos.y+1][playerPos.x].solid;
     }
 
     public void movePlayerRight(){
-        if(playerPos.x != width-1 && !board[playerPos.y][playerPos.x+1].SOLID) {
+        if(playerPos.x != width-1 && !board[playerPos.y][playerPos.x+1].solid) {
 	    board[playerPos.y][playerPos.x] = BlockType.AIR;
 	    playerPos.x += 1;
 	    board[playerPos.y][playerPos.x] = BlockType.PLAYER;
 
 	    // If we move to a solid block reset jump counter
-	    if(playerPos.y != height-1 && board[playerPos.y+1][playerPos.x].SOLID){
+	    if(playerPos.y != height-1 && board[playerPos.y+1][playerPos.x].solid){
 		jumpsSinceLanded = 0;
 	    }
 
@@ -121,13 +126,13 @@ public class Board {
     }
 
     public void movePlayerLeft(){
-	if(playerPos.x != 0 && !board[playerPos.y][playerPos.x-1].SOLID) {
+	if(playerPos.x != 0 && !board[playerPos.y][playerPos.x-1].solid) {
 	    board[playerPos.y][playerPos.x] = BlockType.AIR;
 	    playerPos.x -= 1;
 	    board[playerPos.y][playerPos.x] = BlockType.PLAYER;
 
 	    // If we move to a solid block reset jump counter
-	    if(playerPos.y != height-1 && board[playerPos.y+1][playerPos.x].SOLID){
+	    if(playerPos.y != height-1 && board[playerPos.y+1][playerPos.x].solid){
 	        jumpsSinceLanded = 0;
 	    }
 
@@ -147,7 +152,7 @@ public class Board {
 	    board[playerPos.y][playerPos.x] = BlockType.AIR;
 	    playerPos.y += 1;
 	    board[playerPos.y][playerPos.x] = BlockType.PLAYER;
-	    highscoreHandler.playerMovedUp(-1);
+	    highscoreHandler.updateHighscore(-1);
 	    // Reset jump counter if player is moved to a solid block
 	    if(!playerIsFloating()){
 	        jumpsSinceLanded = 0;
@@ -175,11 +180,11 @@ public class Board {
 		jumpsSinceLanded++;
 	    }
             for(int i = 0; i < jumpHeight; i++) {
-		if (playerPos.y != 0 && (!collisionOn || !board[playerPos.y - 1][playerPos.x].SOLID)) {
+		if (playerPos.y != 0 && (!collisionOn || !board[playerPos.y - 1][playerPos.x].solid)) {
 		    board[playerPos.y][playerPos.x] = BlockType.AIR;
 		    playerPos.y -= 1;
 		    board[playerPos.y][playerPos.x] = BlockType.PLAYER;
-		    highscoreHandler.playerMovedUp(1);
+		    highscoreHandler.updateHighscore(1);
 		    notifyListeners();
 		} else {
 		    // If we can't jump at all we are on the ground

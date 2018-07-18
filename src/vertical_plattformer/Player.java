@@ -18,10 +18,14 @@ import static vertical_plattformer.Config.JUMP_HEIGHT;
  *  and communicates to vertical_plattformer.Board how to change the board state through player action.
  *  Also stores information regarding the players stats, such as speed and jumping height.
  *
+ * NOTE: This class uses two classes with the same name Timer (awt.Timer and swing.Timer), to make
+ * this less confusing the full package name is use whenever these classes are instantialized even if
+ * it is not strictly needed.
  */
 public class Player implements BoardListener{
     private Board board;
     private BoardVisual boardVisual;
+    // Use overqualified names to be extra clear that different Timer classes are used
     private javax.swing.Timer gravityTimer;
     private javax.swing.Timer movementTimer;
     private java.util.Timer powerupTimer;
@@ -36,12 +40,34 @@ public class Player implements BoardListener{
 	this.playerActions = new PlayerDefault(board);
 	boardVisual.setPowerupName(playerActions.getPowerupName());
 
+	final Action fallDown = new AbstractAction()
+	{
+	    @Override public void actionPerformed(ActionEvent e) {
+		if (!playerActions.playerCallMoveDown()) {
+		    alive = false;
+		    stop();
+		}
+	    }
+	};
+	// Use overqualified names to be extra clear that different Timer classes are used
 	this.gravityTimer = new javax.swing.Timer(Config.FALLTIME, fallDown);
 	this.gravityTimer.setRepeats(false);
 
+	final Action autoMovePlayer = new AbstractAction()
+	{
+	    @Override public void actionPerformed(ActionEvent e) {
+		if (movingRight) {
+		    playerActions.playerCallMoveRight();
+		} else {
+		    playerActions.playerCallMoveLeft();
+		}
+	    }
+	};
+	// Use overqualified names to be extra clear that different Timer classes are used
 	this.movementTimer = new javax.swing.Timer(Config.MOVEMENTSPEED, autoMovePlayer);
 	this.movingRight = true;
 
+	// Use overqualified names to be extra clear that different Timer classes are used
 	this.powerupTimer = new java.util.Timer();
 	this.powerupCountdown = new TimerTask()
 	{
@@ -129,28 +155,6 @@ public class Player implements BoardListener{
  	}
     };
 
-    final private Action fallDown = new AbstractAction() {
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            if(!playerActions.playerCallMoveDown()){
-                alive = false;
-                stop();
-	    }
-	}
-    };
-
-
-    final private Action autoMovePlayer = new AbstractAction() {
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            if(movingRight){
-                playerActions.playerCallMoveRight();
-	    }
-	    else{
-		playerActions.playerCallMoveLeft();
-	    }
-	}
-    };
 
     /**
      * Whenever the board changes check if the player floating, if he is check if the gravity timer is running.

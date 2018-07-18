@@ -52,7 +52,7 @@ public class ChunkGenerator {
 
 
 	for(BlockType block : BlockType.values()){
-	    if(block.POWERUP){
+	    if(block.powerup){
 	        allPowerUps.add(block);
 	    }
 	}
@@ -150,7 +150,7 @@ public class ChunkGenerator {
 	for(int r = 0; r < chunk.length; r++){
              boolean foundTopRow = false;
              for(int c = 0; c < boardWidth; c++){
-                 if(chunk[r][c].SOLID){
+                 if(chunk[r][c].solid){
  		    topPlattforms.add(new BlockPoint(c,r));
  		    foundTopRow = true;
  		}
@@ -234,6 +234,7 @@ public class ChunkGenerator {
 	    }
 
 	    // Choose the position with the highest weight and add/remove it.
+	    // This means choose the point with largest min distance
 	    double highestMinDist = -1;
 	    BlockPoint chosenPoint = null;
 	    for(BlockPoint consideredPos : startingPoints){
@@ -242,6 +243,7 @@ public class ChunkGenerator {
 		    chosenPoint = consideredPos;
 		}
 	    }
+	    assert chosenPoint != null;
 	    chosenPoints.add(chosenPoint.copy());
 	    startingPoints.remove(chosenPoint);
 	}

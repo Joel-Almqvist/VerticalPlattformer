@@ -2,7 +2,9 @@ package vertical_plattformer;
 
 
 /**
- * This project uses a lot of constants, Config gathers them all in one place.
+ * This project uses a lot of constants, many of which  depend on each other. To
+ * make it easier to find them all constants are defined here in Config.
+ *
  */
 public final class Config {
 
@@ -103,7 +105,7 @@ public final class Config {
     /** The font size for all text to the right of board */
     public final static int FONT_SIZE = 22;
 
-    private Config(){};
+    private Config(){}
 
 
 }

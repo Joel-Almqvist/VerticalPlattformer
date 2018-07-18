@@ -37,6 +37,8 @@ public class Game{
     public static void main(String[] args) {
         Board board = new Board(BOARD_WIDTH, BOARD_HEIGHT);
         BoardVisual boardVisual = new BoardVisual(board);
+        // The reference to frame is never used, but BoardVisual which lives within
+        // Frame is used contiously, IE warning ignored knowingly.
         BoardFrame frame = new BoardFrame("Platformer", boardVisual);
         Player player = new Player(boardVisual, board);
 

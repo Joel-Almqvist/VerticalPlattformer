@@ -20,12 +20,12 @@ public enum BlockType {
     QUADJUMP(true, true);
 
     /** Indicates whether a block blocks normal jumps and if the player can stand on it*/
-    public final boolean SOLID;
+    public final boolean solid;
     /** Indicates whether said block is a powerup or not*/
-    public final boolean POWERUP;
+    public final boolean powerup;
 
     private BlockType(boolean solid, boolean isPowerUp){
-        SOLID = solid;
-        POWERUP = isPowerUp;
+        this.solid = solid;
+        powerup = isPowerUp;
     }
 }

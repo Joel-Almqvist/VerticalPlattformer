@@ -17,8 +17,8 @@ public class BoardVisual extends JComponent implements BoardListener{
     private Board board;
     /** The coordinate within the JComponent where the score text is shown.
      * Save coordidnates as fields rather than recalculating it for every redraw*/
-    private final int SCORE_X_COORDINATE;
-    private final int SCORE_Y_COORDINATE;
+    private final int scoreXCoordinate;
+    private final int scoreYCoordinate;
 
     private String powerUpName = "";
 
@@ -28,8 +28,8 @@ public class BoardVisual extends JComponent implements BoardListener{
 
     public BoardVisual(Board board) {
         this.board = board;
-        SCORE_X_COORDINATE = board.getWidth()*(RECTANGLE_WIDTH+SPACE_OFFSET) + HIGHSCORE_TEXT_PADDING;
-        SCORE_Y_COORDINATE = board.getHeight() * RECTANGLE_HEIGHT / 4;
+        scoreXCoordinate = board.getWidth() * (RECTANGLE_WIDTH + SPACE_OFFSET) + HIGHSCORE_TEXT_PADDING;
+        scoreYCoordinate = board.getHeight() * RECTANGLE_HEIGHT / 4;
     }
 
     public void boardChange(){
@@ -63,16 +63,16 @@ public class BoardVisual extends JComponent implements BoardListener{
         }
         g2d.setFont(new Font("Monospaced", Font.PLAIN, FONT_SIZE));
         g2d.setColor(Color.RED);
-        g2d.drawString("Score: "+String.valueOf(board.getHighscore()),SCORE_X_COORDINATE,SCORE_Y_COORDINATE);
+        g2d.drawString("Score: "+String.valueOf(board.getHighscore()), scoreXCoordinate, scoreYCoordinate);
 
         g2d.setColor(Color.black);
-        g2d.drawString("Current Powerup:",SCORE_X_COORDINATE,SCORE_Y_COORDINATE + TEXT_ROW_HEIGHT);
+        g2d.drawString("Current Powerup:", scoreXCoordinate, scoreYCoordinate + TEXT_ROW_HEIGHT);
 
         g2d.setColor(Color.ORANGE);
-        g2d.drawString(powerUpName,SCORE_X_COORDINATE,SCORE_Y_COORDINATE + 2 * TEXT_ROW_HEIGHT);
+        g2d.drawString(powerUpName, scoreXCoordinate, scoreYCoordinate + 2 * TEXT_ROW_HEIGHT);
 
         g2d.setColor(Color.blue);
-        g2d.drawString("Level: "+currentLevel,SCORE_X_COORDINATE,SCORE_Y_COORDINATE + 3 * TEXT_ROW_HEIGHT);
+        g2d.drawString("Level: "+currentLevel, scoreXCoordinate, scoreYCoordinate + 3 * TEXT_ROW_HEIGHT);
     }
 
     @Override
