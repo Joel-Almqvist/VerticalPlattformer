@@ -5,7 +5,8 @@ import vertical_plattformer.*;
 /**
  *  PlayerHighJump is a powerup called High Jump which makes the player jump higher.
  */
-public class PlayerHighJump extends PlayerActions{
+public class PlayerHighJump extends PlayerDefault
+{
 
     public PlayerHighJump(Board board){
         super(board);

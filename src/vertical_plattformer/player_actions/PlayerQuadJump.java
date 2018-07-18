@@ -6,7 +6,8 @@ import vertical_plattformer.Board;
  *  PlayerQuadJump is a powerup called Quad Jump which allows the player to
  *  perform four jumps in a row. IE three air jumps are possible.
  */
-public class PlayerQuadJump extends PlayerActions{
+public class PlayerQuadJump extends PlayerDefault
+{
 
     public PlayerQuadJump(Board board){
         super(board);

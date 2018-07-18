@@ -1,6 +1,7 @@
 package vertical_plattformer;
 
 import vertical_plattformer.player_actions.PlayerActions;
+import vertical_plattformer.player_actions.PlayerDefault;
 import vertical_plattformer.player_actions.PlayerHighJump;
 import vertical_plattformer.player_actions.PlayerPowerJump;
 import vertical_plattformer.player_actions.PlayerQuadJump;
@@ -36,7 +37,7 @@ public class Player implements BoardListener{
     public Player(BoardVisual boardVisual, Board board) {
         this.board = board;
 	this.boardVisual = boardVisual;
-	this.playerActions = new PlayerActions(board);
+	this.playerActions = new PlayerDefault(board);
 
 	this.gravityTimer = new javax.swing.Timer(FALLTIME, fallDown);
 	this.gravityTimer.setRepeats(false);
@@ -207,7 +208,7 @@ public class Player implements BoardListener{
 	    powerupCountdown = new TimerTask()
 	    {
 		@Override public void run() {
-		    playerActions = new PlayerActions(board);
+		    playerActions = new PlayerDefault(board);
 		    boardVisual.setPowerupName(playerActions.getPowerupName());
 		}
 	    };

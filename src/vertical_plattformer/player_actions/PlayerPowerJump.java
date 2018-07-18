@@ -7,7 +7,8 @@ import vertical_plattformer.Board;
  *  destroying any BlockPoint he jumps through. Also makes the player jump slightly higher to make it
  *  more balanced.
  */
-public class PlayerPowerJump extends PlayerActions{
+public class PlayerPowerJump extends PlayerDefault
+{
 
     public PlayerPowerJump(Board board){
         super(board);
