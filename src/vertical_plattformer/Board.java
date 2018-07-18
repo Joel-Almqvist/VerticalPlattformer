@@ -29,21 +29,21 @@ public class Board {
         return this.width;
     }
 
-    public Board(int width, int height, int lowestShiftRate){
+    public Board(int width, int height){
         this.width = width;
         this.height = height;
         this.board = new BlockType[height][width];
         this.boardListeners = new ArrayList<>();
         this.highscoreHandler = new HighscoreHandler();
-	this.init(lowestShiftRate);
+	this.init();
     }
 
     /** Initializes the board, vertical_plattformer.ChunkHandler and starts the automatic generation of chunks.
      */
-    private void init(int lowestShiftRate) {
+    private void init() {
 	initializeBoard();
 	// Initialize the chunkHandler with the new board data
-	this.chunkHandler = new ChunkHandler(board, lowestShiftRate);
+	this.chunkHandler = new ChunkHandler(board);
 	Thread t = new Thread(this.chunkHandler);
 	this.chunkHandler.fillList();
 	t.start();

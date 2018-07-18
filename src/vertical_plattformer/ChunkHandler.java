@@ -6,6 +6,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import static vertical_plattformer.Config.CHUNK_CAPACITY;
+import static vertical_plattformer.Config.CHUNK_CHECK_INTERVAL;
 
 public class ChunkHandler implements Runnable {
     private List<BlockType[][]> chunks;
@@ -13,16 +14,14 @@ public class ChunkHandler implements Runnable {
     private ChunkGenerator chunkGenerator;
     private Timer generationTimer;
 
-    private int chunkGenerationInterval;
 
-    public ChunkHandler(BlockType[][] board, int lowestShiftRate){
+    public ChunkHandler(BlockType[][] board){
         this.chunks = new ArrayList<>(CHUNK_CAPACITY+1);
         this.boardWidth = board[0].length;
 
         // This interval must be higher than shiftrate * chunkHeight
 	// else the queue of chunks will deplete quicker than its replenished
 	// 3 < chunkHeight -> the queue will never depletes
-        this.chunkGenerationInterval = lowestShiftRate * 3;
 
         this.chunkGenerator = new ChunkGenerator(boardWidth);
 	this.generationTimer = new Timer(true);
@@ -35,7 +34,7 @@ public class ChunkHandler implements Runnable {
      		public void run(){
                       generateChunk();
 		}
-	},chunkGenerationInterval,chunkGenerationInterval);
+	},CHUNK_CHECK_INTERVAL,CHUNK_CHECK_INTERVAL);
     }
 
     /** Used to fill the vertical_plattformer.ChunkHandler's chunk list manually

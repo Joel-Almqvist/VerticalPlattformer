@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import static vertical_plattformer.Config.MAX_DISTANCE;
+import static vertical_plattformer.Config.*;
 
 /** ChunkGenerator is responsible for creating "chunks" which are small extensions of the board to be
  * appended at the top of the board whenever a shift occurs. ChunkGenerator may create more difficult
@@ -37,9 +37,9 @@ public class ChunkGenerator {
      *  NOTE: A high amount of plattforms may create an unsolveable chunk due to blocking the player.
      *
      */
-    private double minDistance = 4;
-    private int chunkHeight = 6;
-    private int plattformsPerChunk = 3;
+    private double minDistance = STARTING_MIN_DISTANCE;
+    private int chunkHeight = STARTING_CHUNK_HEIGHT;
+    private int plattformsPerChunk = STARTING_PLATTFORMS_PER_CHUNK;
 
 
     /** A list containing one object of every powerup BlockType */

@@ -34,7 +34,7 @@ public class Game{
     }
 
     public static void main(String[] args) {
-        Board board = new Board(BOARD_WIDTH, BOARD_HEIGHT, LOWEST_SHIFT_INTERVAL);
+        Board board = new Board(BOARD_WIDTH, BOARD_HEIGHT);
         BoardVisual boardVisual = new BoardVisual(board);
         BoardFrame frame = new BoardFrame("Platformer", boardVisual);
         Player player = new Player(boardVisual, board);
@@ -45,7 +45,6 @@ public class Game{
         Game game = new Game(board, player);
         game.queueNextShift();
 
-        // TODO 1: Configfil
         // TODO 2: Visa vilken level man är på
         // TODO 3: Mer kommentarer
     }

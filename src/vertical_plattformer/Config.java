@@ -54,15 +54,28 @@ public final class Config {
     public static final int JUMP_HEIGHT = 5;
 
 
+    // CHUNKGENERATION *******************************************************
+    /** The maximal distance between two BlockPoint to be considered reachable */
+    public final static int MAX_DISTANCE = 2 * JUMP_HEIGHT -1 ;
+
+    /** How far away plattforms must be from a "top position" at the start */
+    public final static int STARTING_MIN_DISTANCE = 4;
+
+    /** The height of chunks initially*/
+    public final static int STARTING_CHUNK_HEIGHT = 6;
+
+    /** How many plattforms are generated per chunk initially*/
+    public final static int STARTING_PLATTFORMS_PER_CHUNK = 3;
+
+
     // CHUNKHANDLER ***************************************************************
     /** How many chunks ChunkHandler can maximally store */
     public final static int CHUNK_CAPACITY = 3;
 
-
-    // CHUNKGENERATION *******************************************************
-    /** The maximal distance between two BlockPoint to be considered reachable */
-    public final static int MAX_DISTANCE = 2 * JUMP_HEIGHT -1 ; //SHOULD BE JUMPHEIGHT -1
-
+    /** How frequently ChunkHandler checks whether to generate a new chunk or not.
+     * ChunkHeight is never decreased so this interval will never be lower than how often
+     * a new chunk is needed by shiftDown()  */
+    public final static int CHUNK_CHECK_INTERVAL = LOWEST_SHIFT_INTERVAL * STARTING_CHUNK_HEIGHT;
 
     // BOARD **********************************************************************
     /** How many rows the player should stand on at the start*/
