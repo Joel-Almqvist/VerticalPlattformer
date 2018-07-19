@@ -11,15 +11,6 @@ import vertical_plattformer.Board;
  * to how the game state should change.
  *
  *
- * Every action has two functions, only public which is called when the player/game wants to
- * do something, and one protected which performs the action itself. This separation exists
- * so that new powerups more easily can perform an action without having to use the playerCall
- * interface which may have been overriden to do something else.
- *
- * Example:
- * A powerup which moves 2 steps right on playerCallMoveRight and 1 step up 1 step right on playerCallJump,
- * this powerup needs only override the playerCalls and call the corresponding actions correctly.
- *
  */
 public class PlayerDefault implements PlayerActions{
     protected Board board;
@@ -33,34 +24,18 @@ public class PlayerDefault implements PlayerActions{
     }
 
     public void playerCallMoveLeft(){
-	movePlayerLeft();
-    }
-
-    protected void movePlayerLeft(){
-        board.movePlayerLeft();
+	board.movePlayerLeft();
     }
 
     public void playerCallMoveRight(){
-	movePlayerRight();
-    }
-
-    protected void movePlayerRight(){
-        board.movePlayerRight();
+	board.movePlayerRight();
     }
 
     public boolean playerCallMoveDown(){
-        return movePlayerDown();
-    }
-
-    protected boolean movePlayerDown(){
-	return board.movePlayerDown();
+        return board.movePlayerDown();
     }
 
     public boolean playerCallIsFloating(){
-        return playerIsFloating();
-    }
-
-    protected boolean playerIsFloating(){
         return board.playerIsFloating();
     }
 
