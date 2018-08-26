@@ -3,13 +3,12 @@ package vertical_plattformer.player_actions;
 
 import vertical_plattformer.Board;
 
-/** The default behavior for actions are defined here in PlayerDefault, subclass this to
- * create a powerup which inherits the default behavior for non-modified actions.
+/** The default behavior for actions are defined here in PlayerDefault, this class allows
+ * for creating powerups easier through subclassing, but any powerup fullfilling the PlayerActions
+ * interface is enough to be a considered a powerup.
  *
- * PlayerDefault is responsible for reading the game state of board and determining
- * the state the player is in. It also has the responsibility of mapping player actions
- * to how the game state should change.
- *
+ * PlayerDefault reads the gamestate from Board and accesses Board's public interface to modify
+ * the player's state as seen fit.
  *
  */
 public class PlayerDefault implements PlayerActions{
