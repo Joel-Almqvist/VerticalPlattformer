@@ -23,6 +23,7 @@ public class Game{
     private Player player;
     private Timer gameTimer;
     private int shiftInterval;
+    private double timeToNextShift;
     private int currentLevel = 1;
 
 
@@ -31,6 +32,7 @@ public class Game{
         this.player = player;
         this.boardVisual = boardVisual;
         this.shiftInterval = STARTING_SHIFT_INTERVAL;
+        this.timeToNextShift = shiftInterval;
         this.gameTimer = new Timer(true);
     }
 
@@ -38,7 +40,7 @@ public class Game{
         Board board = new Board(BOARD_WIDTH, BOARD_HEIGHT);
         BoardVisual boardVisual = new BoardVisual(board);
         // The reference to frame is never used, but BoardVisual which lives within
-        // Frame is used contiously, IE warning ignored knowingly.
+        // the frame and is used contiously, IE warning ignored knowingly.
         BoardFrame frame = new BoardFrame("Platformer", boardVisual);
         Player player = new Player(boardVisual, board);
 
@@ -61,6 +63,7 @@ public class Game{
         this.gameTimer.schedule(new TimerTask(){
             @Override
             public void run() {
+                double startTime = System.currentTimeMillis();
                 // Perform shift and see if game is over
                 if (!player.playerAlive() || !board.shiftDown()) {
                     gameTimer.cancel();
@@ -73,11 +76,15 @@ public class Game{
                     if(board.getHighscore() >= POINTS_TO_REACH_NEXT_LEVEL * (currentLevel)){
                         levelUp();
                     }
+
+                    double executionLength = System.currentTimeMillis() - startTime;
+                    timeToNextShift = shiftInterval - executionLength;
+
                     // Queue next shift with possible new shiftInterval
                     queueNextShift();
                 }
             }
-        }, this.shiftInterval);
+        }, (long) this.timeToNextShift);
         }
 
 
