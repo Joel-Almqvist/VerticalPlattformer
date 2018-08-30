@@ -119,7 +119,7 @@ public class Board {
 	    if(playerPos.y != height-1 && board[playerPos.y+1][playerPos.x].solid){
 		jumpsSinceLanded = 0;
 	    }
-
+	    checkDoubleJumpReset();
 	    notifyListeners();
 	}
 
@@ -130,15 +130,20 @@ public class Board {
 	    board[playerPos.y][playerPos.x] = BlockType.AIR;
 	    playerPos.x -= 1;
 	    board[playerPos.y][playerPos.x] = BlockType.PLAYER;
-
-	    // If we move to a solid block reset jump counter
-	    if(playerPos.y != height-1 && board[playerPos.y+1][playerPos.x].solid){
-	        jumpsSinceLanded = 0;
-	    }
-
+	    checkDoubleJumpReset();
 	    notifyListeners();
 	}
     }
+
+    /**
+     * Resets the jumpcounter if the player is above a solid block
+     */
+    private void checkDoubleJumpReset(){
+	if(playerPos.y != height-1 && board[playerPos.y+1][playerPos.x].solid){
+	    jumpsSinceLanded = 0;
+    	}
+    }
+
 
     /**
      * Shifts the player one step downward, used to simulate gravity. The return bool
@@ -161,7 +166,7 @@ public class Board {
 	}
 	else{
 	    jumpsSinceLanded = 0;
-            System.out.println("Failed moving player down");
+            return false;
 	}
 	return true;
     }
