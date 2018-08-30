@@ -106,11 +106,6 @@ public class ChunkGenerator {
 
 	List<BlockPoint> upmostPlattforms = getTopPlattforms(inputChunk);
 	List<BlockPoint> reachablePositions = getReachablePositions(returnChunk, upmostPlattforms);
-	if(reachablePositions.isEmpty()){
-	    // This should only occur if too harsh or contradictory restrictions
-	    // have been placed on the chunk to be generated.
-	    throw new IllegalArgumentException("No reachable positions can be found");
-	}
 	List<BlockPoint> chosenPositions = chooseFurthestPoints(reachablePositions);
 
 
@@ -162,7 +157,8 @@ public class ChunkGenerator {
 
 
     /** Finds all reachable positions within the given chunk which are atleast minDistance
-     *  away from an upmost position.
+     *  away from an upmost position. Throws an error if no reachable positions exists within
+     *  said chunk, this usually indicates poorly set constant-values.
      *
      * @param chunk The chunk to which the reachable positions relate to, it is different from the
      *              chunk the topPlattforms exists within.
@@ -173,7 +169,8 @@ public class ChunkGenerator {
      * @return A list of all the positions within "chunk" which are atleast minDistance away from an
      * 		upmost position given by "topPlattforms".
      */
-    private List<BlockPoint> getReachablePositions(BlockType[][] chunk, List<BlockPoint> topPlattforms){
+    private List<BlockPoint> getReachablePositions(BlockType[][] chunk, List<BlockPoint> topPlattforms) throws
+	    IllegalStateException {
 	List<BlockPoint> reachablePositions = new ArrayList<>();
 	// For every upmost position find all reachable positions
 	for(BlockPoint pos : topPlattforms){
@@ -188,6 +185,9 @@ public class ChunkGenerator {
 		    }
 		}
 	    }
+	}
+	if(reachablePositions.isEmpty()){
+	    throw new IllegalStateException("No reachable positions exists");
 	}
 	return reachablePositions;
     }

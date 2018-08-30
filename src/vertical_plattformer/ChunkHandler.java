@@ -80,7 +80,10 @@ public class ChunkHandler implements Runnable {
 	return invertedChunk;
     }
 
-    public BlockType[][] getNextChunk(){
+    public BlockType[][] getNextChunk() throws IndexOutOfBoundsException{
+        if(this.chunks.isEmpty()){
+            throw new IndexOutOfBoundsException("ChunkHandler has no available chunk");
+	}
         BlockType[][] nextChunk = this.chunks.get(0);
         this.chunks.remove(0);
         return nextChunk;
