@@ -244,7 +244,13 @@ public class Board {
 	// Update the nextchunk traverse index and ask for a new chunk if
 	// the last row of the chunk was used.
     	if(nextChunkIndex + 1 == nextChunk.length){
-    	    nextChunk = chunkHandler.getNextChunk();
+    	    try {
+		nextChunk = chunkHandler.getNextChunk();
+	    } catch(IllegalStateException e){
+    	        e.printStackTrace();
+    	        System.out.println("No available chunk in ChunkHandler");
+    	        System.exit(1);
+	    }
     	    nextChunkIndex = 0;
     	}
     	else{

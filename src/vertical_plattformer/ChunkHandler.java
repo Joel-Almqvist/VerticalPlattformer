@@ -45,7 +45,13 @@ public class ChunkHandler implements Runnable {
 	this.generationTimer.scheduleAtFixedRate(new TimerTask(){
      		@Override
      		public void run(){
-                      generateChunk();
+     		    try {
+			generateChunk();
+		    } catch(IllegalStateException e){
+			e.printStackTrace();
+			System.out.println("No available chunk in ChunkHandler");
+			System.exit(1);
+		    }
 		}
 	},CHUNK_CHECK_INTERVAL,CHUNK_CHECK_INTERVAL);
     }
@@ -61,9 +67,13 @@ public class ChunkHandler implements Runnable {
 
     /** Create a new chunk based on the appearance of the last chunk in the chunk-list.
      */
-    private void generateChunk(){
+    private void generateChunk() throws IllegalStateException{
         if(this.chunks.size() < CHUNK_CAPACITY) {
-	    //System.out.println("generating chunk");
+            if(chunks.isEmpty()){
+                // We can't recover from an empty list since we can't determine which is chunk we should
+		// append the generated chunk on top of.
+		throw new IllegalStateException("ChunkHandler has no available chunk");
+	    }
 	    BlockType[][] lastChunk = this.chunks.get(this.chunks.size() - 1);
 	    BlockType[][] newChunk = chunkGenerator.generateChunk(invertChunk(lastChunk));
 	    this.chunks.add(newChunk);
@@ -80,9 +90,13 @@ public class ChunkHandler implements Runnable {
 	return invertedChunk;
     }
 
-    public BlockType[][] getNextChunk() throws IndexOutOfBoundsException{
+    public BlockType[][] getNextChunk() throws IllegalStateException{
         if(this.chunks.isEmpty()){
-            throw new IndexOutOfBoundsException("ChunkHandler has no available chunk");
+            /* ChunkHandler appends chunks to the end of the list, Board reads from the start of the list.
+	    ** If the list is empty we can't easily recover since every chunk depends on how the chunk before it looks,
+	    **  and we can't determine whether the latest chunk is currently being created or not.
+	    */
+            throw new IllegalStateException("ChunkHandler has no available chunk");
 	}
         BlockType[][] nextChunk = this.chunks.get(0);
         this.chunks.remove(0);
