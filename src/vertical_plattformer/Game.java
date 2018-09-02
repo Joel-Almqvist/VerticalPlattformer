@@ -16,7 +16,7 @@ import static vertical_plattformer.Config.*;
  *
  *  Game has many constants determining how the difficulty of the game escalates.
  */
-public class Game{
+public class Game {
 
     private Board board;
     private BoardVisual boardVisual;
@@ -59,7 +59,7 @@ public class Game{
      * NOTE: The shifts take execution-time + shiftInterval and may as such
      * be slower or quicker than expected. Noteably takes longer when a new chunk is started.
      */
-    public void queueNextShift(){
+    private void queueNextShift(){
         this.gameTimer.schedule(new TimerTask(){
             @Override
             public void run() {
@@ -97,7 +97,7 @@ public class Game{
      *
      * NOTE: ChunkHandler stores chunks to use and as such the more difficult chunks are not seen instantly
      */
-    public void levelUp(){
+    private void levelUp(){
         currentLevel++;
         boardVisual.currentLevel = currentLevel;
         System.out.println("Level up, now at "+currentLevel);
